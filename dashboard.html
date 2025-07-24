@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuotePaddy - Admin Database Manager</title>
+    <link rel="shortcut icon" href="icon.png" type="image/x-icon">
     <style>
-        /* Universal Box-Sizing and Base Styles */
+        /* Mobile First Approach - Base Styles */
         *, *::before, *::after {
             margin: 0;
             padding: 0;
@@ -25,6 +26,7 @@
             --danger: #dc3545;
             --info: #17a2b8;
             --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
         }
 
         body {
@@ -32,48 +34,125 @@
             background-color: var(--light-gray);
             color: var(--dark);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* Header */
+        /* Header - Mobile First */
         .header {
             background: var(--white);
-            padding: 1rem 0;
+            padding: 1rem;
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
             z-index: 100;
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: bold;
             color: var(--primary);
             text-decoration: none;
+            display: flex;
+            align-items: center;
         }
-
+        
+        .logo img {
+            width: 180px;
+            max-width: 100%;
+        }
+        
         .admin-badge {
             background: var(--warning);
             color: var(--dark);
-            padding: 0.25rem 0.75rem;
+            padding: 0.2rem 0.6rem;
             border-radius: 15px;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: bold;
             margin-left: 0.5rem;
         }
 
-        .nav-links {
+        /* Hamburger Menu */
+        .hamburger {
             display: flex;
-            gap: 1rem;
-            align-items: center;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 2rem;
+            height: 2rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 10;
+        }
+        
+        .hamburger:focus {
+            outline: none;
+        }
+        
+        .hamburger-line {
+            width: 2rem;
+            height: 0.25rem;
+            background: var(--primary);
+            border-radius: 10px;
+            transition: var(--transition);
+            position: relative;
+            transform-origin: 1px;
+        }
+        
+        /* Nav Links - Initially hidden on mobile */
+        .nav-links {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            max-width: 300px;
+            height: 100vh;
+            background: var(--white);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 5rem 1.5rem 2rem;
+            gap: 1.5rem;
+            transition: var(--transition);
+            z-index: 5;
+        }
+        
+        .nav-links.active {
+            right: 0;
+        }
+        
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+        
+        .nav-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        /* Hamburger animation when active */
+        .hamburger.active .hamburger-line:first-child {
+            transform: rotate(45deg);
+        }
+        
+        .hamburger.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active .hamburger-line:last-child {
+            transform: rotate(-45deg);
         }
 
         .btn {
@@ -86,7 +165,9 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            text-align: center;
+            justify-content: center;
         }
 
         .btn-primary {
@@ -127,47 +208,46 @@
 
         /* Main Layout */
         .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
+            width: 100%;
+            padding: 1rem;
         }
 
         .page-header {
             background: var(--white);
-            border-radius: 10px;
+            border-radius: 8px;
             box-shadow: var(--shadow);
-            padding: 2rem;
-            margin-bottom: 2rem;
+            padding: 1.5rem 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .page-title {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: var(--secondary);
             margin-bottom: 0.5rem;
         }
 
         .page-subtitle {
             color: #666;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .stat-card {
             background: var(--white);
-            border-radius: 10px;
+            border-radius: 8px;
             box-shadow: var(--shadow);
-            padding: 1.5rem;
+            padding: 1rem;
             text-align: center;
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary);
             margin-bottom: 0.5rem;
@@ -175,13 +255,13 @@
 
         .stat-label {
             color: #666;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         /* Database Management Section */
         .database-manager {
             background: var(--white);
-            border-radius: 10px;
+            border-radius: 8px;
             box-shadow: var(--shadow);
             overflow: hidden;
         }
@@ -189,29 +269,29 @@
         .section-header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: var(--white);
-            padding: 1.5rem;
+            padding: 1rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             margin: 0;
         }
 
         .database-content {
-            padding: 2rem;
+            padding: 1rem;
         }
 
         /* Add Item Form */
         .add-item-form {
             background: var(--light-gray);
             border-radius: 8px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            padding: 1.5rem 1rem;
+            margin-bottom: 1.5rem;
             border: 2px dashed var(--border-color);
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .add-item-form.active {
@@ -221,9 +301,8 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;
+            grid-template-columns: 1fr;
             gap: 1rem;
-            align-items: end;
         }
 
         .form-group {
@@ -235,15 +314,16 @@
             margin-bottom: 0.5rem;
             font-weight: 600;
             color: var(--secondary);
+            font-size: 0.9rem;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.6rem;
             border: 1px solid var(--border-color);
             border-radius: 5px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
+            font-size: 0.9rem;
+            transition: var(--transition);
         }
 
         input:focus, select:focus, textarea:focus {
@@ -255,21 +335,19 @@
         /* Filter and Search */
         .filter-section {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
         }
 
         .search-group {
             position: relative;
-            flex: 1;
-            min-width: 300px;
+            width: 100%;
         }
 
         .search-group input {
             padding-left: 2.5rem;
+            width: 100%;
         }
 
         .search-icon {
@@ -283,17 +361,29 @@
         .filter-buttons {
             display: flex;
             gap: 0.5rem;
-            flex-wrap: wrap;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            scrollbar-width: thin;
+        }
+
+        .filter-buttons::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .filter-buttons::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 2px;
         }
 
         .filter-btn {
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0.8rem;
             background: var(--white);
             border: 1px solid var(--border-color);
             border-radius: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            white-space: nowrap;
         }
 
         .filter-btn.active {
@@ -302,51 +392,60 @@
             border-color: var(--primary);
         }
 
+        /* Project Type Badges */
+        .project-badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: capitalize;
+            display: inline-block;
+        }
+
+        .project-house-wiring { background: #ffeaa7; color: #2d3436; }
+        .project-solar-installation { background: #81ecec; color: #2d3436; }
+        .project-cctv-installation { background: #fab1a0; color: #2d3436; }
+        .project-smart-home { background: #a29bfe; color: #2d3436; }
+        .project-lighting-design { background: #fd79a8; color: #2d3436; }
+        .project-electric-fence { background: #55efc4; color: #2d3436; }
+        .project-ac-installation { background: #74b9ff; color: #2d3436; }
+        .project-generator-installation { background: #a3a3a3; color: #2d3436; }
+        .project-dish-installation { background: #fdcb6e; color: #2d3436; }
+        .project-solar-pump { background: #00b894; color: #2d3436; }
+
         /* Items Table */
         .items-table-container {
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            overflow: hidden;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .items-table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 600px;
         }
 
         .items-table th {
             background: var(--light-gray);
-            padding: 1rem;
+            padding: 0.8rem;
             text-align: left;
             font-weight: 600;
             color: var(--secondary);
             border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
+            font-size: 0.8rem;
         }
 
         .items-table td {
-            padding: 1rem;
+            padding: 0.8rem;
             border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
         }
 
         .items-table tr:hover {
             background: rgba(35, 81, 216, 0.05);
         }
-
-        .category-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            text-transform: capitalize;
-        }
-
-        .category-lighting { background: #ffeaa7; color: #2d3436; }
-        .category-cabling { background: #81ecec; color: #2d3436; }
-        .category-conduiting { background: #fab1a0; color: #2d3436; }
-        .category-control { background: #a29bfe; color: #2d3436; }
-        .category-safety { background: #fd79a8; color: #2d3436; }
 
         .action-buttons {
             display: flex;
@@ -363,27 +462,29 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
+            overflow-y: auto;
+            padding: 1rem;
         }
 
         .modal.show {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
         }
 
         .modal-content {
             background: var(--white);
             border-radius: 10px;
+            width: 100%;
             max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
         }
 
         .modal-header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: var(--white);
-            padding: 1.5rem;
+            padding: 1rem;
             border-radius: 10px 10px 0 0;
             display: flex;
             justify-content: space-between;
@@ -391,7 +492,7 @@
         }
 
         .modal-body {
-            padding: 2rem;
+            padding: 1.5rem;
         }
 
         .close-btn {
@@ -400,14 +501,16 @@
             color: var(--white);
             font-size: 1.5rem;
             cursor: pointer;
+            padding: 0;
         }
 
         /* Success/Error Messages */
         .alert {
-            padding: 1rem;
+            padding: 0.8rem;
             border-radius: 5px;
             margin-bottom: 1rem;
             display: none;
+            font-size: 0.9rem;
         }
 
         .alert.show {
@@ -426,39 +529,118 @@
             border: 1px solid #f5c6cb;
         }
 
-        /* Responsive Design */
-        @media (max-width: 1024px) {
+        /* Responsive Design - Tablet and Up */
+        @media (min-width: 768px) {
+            .header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .main-container {
+                padding: 1.5rem;
+            }
+            
+            .page-header {
+                padding: 2rem;
+            }
+            
+            .page-title {
+                font-size: 1.75rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .database-content {
+                padding: 1.5rem;
+            }
+            
+            .add-item-form {
+                padding: 1.5rem;
+            }
+            
             .form-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+                grid-template-columns: 2fr 1fr 1fr;
             }
-
+            
             .filter-section {
-                flex-direction: column;
-                align-items: stretch;
+                flex-direction: row;
+                align-items: center;
             }
-
+            
             .search-group {
-                min-width: auto;
+                min-width: 250px;
+                max-width: 400px;
+            }
+            
+            .filter-buttons {
+                overflow-x: visible;
+                flex-wrap: wrap;
+                padding-bottom: 0;
+            }
+            
+            .action-buttons {
+                flex-direction: row;
+            }
+            
+            /* Hide hamburger, show regular nav */
+            .hamburger {
+                display: none;
+            }
+            
+            .nav-links {
+                position: static;
+                width: auto;
+                height: auto;
+                flex-direction: row;
+                padding: 0;
+                background: transparent;
+                box-shadow: none;
+                gap: 0.8rem;
+            }
+            
+            .nav-overlay {
+                display: none;
             }
         }
 
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+        /* Desktop and Up */
+        @media (min-width: 1024px) {
+            .header {
+                padding: 1rem 2rem;
             }
-
-            .items-table {
-                font-size: 0.85rem;
+            
+            .main-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 2rem;
             }
-
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .section-header {
+                flex-direction: row;
+                align-items: center;
+                padding: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            }
+            
             .items-table th,
             .items-table td {
-                padding: 0.7rem;
+                padding: 1rem;
             }
-
-            .action-buttons {
-                flex-direction: column;
+            
+            .nav-links {
+                gap: 1rem;
             }
         }
 
@@ -475,26 +657,29 @@
 </head>
 <body>
     <header class="header">
-        <div class="header-content">
-            <a href="#" class="logo">
-                QuotePaddy
-                <span class="admin-badge">ADMIN</span>
-            </a>
-            
-            <nav class="nav-links">
-                <a href="#" class="btn btn-secondary">📊 Dashboard</a> 
-                <a href="#" class="btn btn-secondary">📋 View Quotes</a>
-                <a href="#" class="btn btn-secondary">👥 Users</a>
-                <a href="#" class="btn btn-primary">🔙 Back to App</a>
-                <a href="#" class="btn btn-danger">Logout</a>
-            </nav>
-        </div>
+        <a href="#" class="logo">
+            <img src="quote.png" alt="QuotePaddy">
+            <span class="admin-badge">LAGOS</span>
+        </a>
+        
+        <button class="hamburger" id="hamburger">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        
+        <div class="nav-overlay" id="navOverlay"></div>
+        
+        <nav class="nav-links" id="navLinks">
+            <a href="#" class="btn btn-primary">🔙 Back to App</a>
+            <a href="#" class="btn btn-danger">Logout</a>
+        </nav>
     </header>
 
     <div class="main-container">
         <div class="page-header">
             <h1 class="page-title">Database Manager</h1>
-            <p class="page-subtitle">Manage electrical components, pricing, and inventory for the quotation system</p>
+            <p class="page-subtitle">Manage electrical components by project type for the quotation system</p>
         </div>
 
         <div class="stats-grid">
@@ -503,8 +688,8 @@
                 <div class="stat-label">Total Items</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="categories">5</div>
-                <div class="stat-label">Categories</div>
+                <div class="stat-number" id="projectTypes">10</div>
+                <div class="stat-label">Project Types</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="recentlyAdded">3</div>
@@ -518,7 +703,7 @@
 
         <div class="database-manager">
             <div class="section-header">
-                <h2 class="section-title">Electrical Components Database</h2>
+                <h2 class="section-title">Project Components Database</h2>
                 <button class="btn btn-success" id="toggleAddForm">➕ Add New Item</button>
             </div>
 
@@ -541,14 +726,19 @@
                                 <input type="text" id="itemName" name="itemName" required placeholder="e.g., LED Ceiling Light 20W">
                             </div>
                             <div class="form-group">
-                                <label for="itemCategory">Category *</label>
-                                <select id="itemCategory" name="itemCategory" required>
-                                    <option value="">Select Category</option>
-                                    <option value="lighting">Lighting</option>
-                                    <option value="cabling">Cabling</option>
-                                    <option value="conduiting">Conduiting</option>
-                                    <option value="control">Control Systems</option>
-                                    <option value="safety">Safety Equipment</option>
+                                <label for="itemProjectType">Project Type *</label>
+                                <select id="itemProjectType" name="itemProjectType" required>
+                                    <option value="">Select Project Type</option>
+                                    <option value="house-wiring">House wiring</option>
+                                    <option value="solar-installation">Solar installation</option>
+                                    <option value="cctv-installation">CCTV installation</option>
+                                    <option value="smart-home">Smart home automation</option>
+                                    <option value="lighting-design">Lighting design & TV console</option>
+                                    <option value="electric-fence">Electric fence installation</option>
+                                    <option value="ac-installation">AC installation</option>
+                                    <option value="generator-installation">Generator installation</option>
+                                    <option value="dish-installation">Dish installation (Dstv, Gotv, etc)</option>
+                                    <option value="solar-pump">Solar pump installation</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -582,16 +772,21 @@
                 <div class="filter-section">
                     <div class="search-group">
                         <span class="search-icon">🔍</span>
-                        <input type="text" id="searchItems" placeholder="Search items by name or description...">
+                        <input type="text" id="searchItems" placeholder="Search items by name or project type...">
                     </div>
                     
                     <div class="filter-buttons">
-                        <button class="filter-btn active" data-category="all">All Items</button>
-                        <button class="filter-btn" data-category="lighting">Lighting</button>
-                        <button class="filter-btn" data-category="cabling">Cabling</button>
-                        <button class="filter-btn" data-category="conduiting">Conduiting</button>
-                        <button class="filter-btn" data-category="control">Control</button>
-                        <button class="filter-btn" data-category="safety">Safety</button>
+                        <button class="filter-btn active" data-project-type="all">All Items</button>
+                        <button class="filter-btn" data-project-type="house-wiring">House Wiring</button>
+                        <button class="filter-btn" data-project-type="solar-installation">Solar</button>
+                        <button class="filter-btn" data-project-type="cctv-installation">CCTV</button>
+                        <button class="filter-btn" data-project-type="smart-home">Smart Home</button>
+                        <button class="filter-btn" data-project-type="lighting-design">Lighting Design</button>
+                        <button class="filter-btn" data-project-type="electric-fence">Electric Fence</button>
+                        <button class="filter-btn" data-project-type="ac-installation">AC</button>
+                        <button class="filter-btn" data-project-type="generator-installation">Generator</button>
+                        <button class="filter-btn" data-project-type="dish-installation">Dish</button>
+                        <button class="filter-btn" data-project-type="solar-pump">Solar Pump</button>
                     </div>
                 </div>
 
@@ -601,7 +796,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Item Name</th>
-                                <th>Category</th>
+                                <th>Project Type</th>
                                 <th>Price (₦)</th>
                                 <th>Unit</th>
                                 <th>Stock</th>
@@ -629,13 +824,18 @@
                         <input type="text" id="editItemName" name="editItemName" required>
                     </div>
                     <div class="form-group">
-                        <label for="editItemCategory">Category *</label>
-                        <select id="editItemCategory" name="editItemCategory" required>
-                            <option value="lighting">Lighting</option>
-                            <option value="cabling">Cabling</option>
-                            <option value="conduiting">Conduiting</option>
-                            <option value="control">Control Systems</option>
-                            <option value="safety">Safety Equipment</option>
+                        <label for="editItemProjectType">Project Type *</label>
+                        <select id="editItemProjectType" name="editItemProjectType" required>
+                            <option value="house-wiring">House wiring</option>
+                            <option value="solar-installation">Solar installation</option>
+                            <option value="cctv-installation">CCTV installation</option>
+                            <option value="smart-home">Smart home automation</option>
+                            <option value="lighting-design">Lighting design & TV console</option>
+                            <option value="electric-fence">Electric fence installation</option>
+                            <option value="ac-installation">AC installation</option>
+                            <option value="generator-installation">Generator installation</option>
+                            <option value="dish-installation">Dish installation (Dstv, Gotv, etc)</option>
+                            <option value="solar-pump">Solar pump installation</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -668,42 +868,57 @@
     </div>
 
     <script>
-        // Sample database items (same as original, with added stock field)
+        // Sample database items organized by project types
         let databaseItems = [
-            // Lighting
-            { id: 1, name: "LED Ceiling Light 20W", category: "lighting", price: 5000, unit: "pcs", stock: 45 },
-            { id: 2, name: "Fluorescent Tube Light 40W", category: "lighting", price: 3500, unit: "pcs", stock: 32 },
-            { id: 3, name: "Wall Socket 13A", category: "lighting", price: 1200, unit: "pcs", stock: 150 },
-            { id: 4, name: "Light Switch Single Gang", category: "lighting", price: 800, unit: "pcs", stock: 200 },
-            { id: 5, name: "Emergency Exit Light", category: "lighting", price: 15000, unit: "pcs", stock: 12 },
+            // House Wiring
+            { id: 1, name: "PVC Cable 2.5mm Twin & Earth", projectType: "house-wiring", price: 450, unit: "meters", stock: 500 },
+            { id: 2, name: "Light Switch Single Gang", projectType: "house-wiring", price: 800, unit: "pcs", stock: 200 },
+            { id: 3, name: "Wall Socket 13A", projectType: "house-wiring", price: 1200, unit: "pcs", stock: 150 },
             
-            // Cabling
-            { id: 6, name: "PVC Cable 2.5mm Twin & Earth", category: "cabling", price: 450, unit: "meters", stock: 500 },
-            { id: 7, name: "Armoured Cable 4mm SWA", category: "cabling", price: 850, unit: "meters", stock: 300 },
-            { id: 8, name: "Cat6 Network Cable", category: "cabling", price: 300, unit: "meters", stock: 1000 },
-            { id: 9, name: "Coaxial Cable RG6", category: "cabling", price: 200, unit: "meters", stock: 750 },
-            { id: 10, name: "Fire Resistant Cable", category: "cabling", price: 1200, unit: "meters", stock: 250 },
+            // Solar Installation
+            { id: 4, name: "Solar Panel 300W Mono", projectType: "solar-installation", price: 45000, unit: "pcs", stock: 25 },
+            { id: 5, name: "Inverter 5KVA", projectType: "solar-installation", price: 180000, unit: "pcs", stock: 10 },
+            { id: 6, name: "Solar Battery 200AH", projectType: "solar-installation", price: 95000, unit: "pcs", stock: 15 },
             
-            // Conduiting
-            { id: 11, name: "PVC Conduit 20mm", category: "conduiting", price: 150, unit: "meters", stock: 800 },
-            { id: 12, name: "Metal Conduit 25mm", category: "conduiting", price: 400, unit: "meters", stock: 400 },
-            { id: 13, name: "Cable Tray 300mm", category: "conduiting", price: 2500, unit: "meters", stock: 100 },
-            { id: 14, name: "Conduit Bends 20mm", category: "conduiting", price: 80, unit: "pcs", stock: 300 },
-            { id: 15, name: "Junction Box Plastic", category: "conduiting", price: 250, unit: "pcs", stock: 180 },
+            // CCTV Installation
+            { id: 7, name: "4K CCTV Camera", projectType: "cctv-installation", price: 25000, unit: "pcs", stock: 30 },
+            { id: 8, name: "8-Channel DVR", projectType: "cctv-installation", price: 45000, unit: "pcs", stock: 12 },
+            { id: 9, name: "1TB Surveillance HDD", projectType: "cctv-installation", price: 18000, unit: "pcs", stock: 20 },
             
-            // Control Systems
-            { id: 16, name: "MCB 32A Single Pole", category: "control", price: 2500, unit: "pcs", stock: 75 },
-            { id: 17, name: "RCD 63A 30mA", category: "control", price: 8500, unit: "pcs", stock: 25 },
-            { id: 18, name: "Contactor 25A", category: "control", price: 12000, unit: "pcs", stock: 30 },
-            { id: 19, name: "Timer Switch", category: "control", price: 4500, unit: "pcs", stock: 40 },
-            { id: 20, name: "Distribution Board 12 Way", category: "control", price: 25000, unit: "pcs", stock: 15 },
+            // Smart Home Automation
+            { id: 10, name: "Smart Light Switch", projectType: "smart-home", price: 15000, unit: "pcs", stock: 40 },
+            { id: 11, name: "Smart Door Lock", projectType: "smart-home", price: 45000, unit: "pcs", stock: 15 },
+            { id: 12, name: "Smart Hub Controller", projectType: "smart-home", price: 35000, unit: "pcs", stock: 8 },
             
-            // Safety Equipment
-            { id: 21, name: "Smoke Detector", category: "safety", price: 8000, unit: "pcs", stock: 60 },
-            { id: 22, name: "Fire Extinguisher Point", category: "safety", price: 3500, unit: "pcs", stock: 35 },
-            { id: 23, name: "Emergency Push Button", category: "safety", price: 2200, unit: "pcs", stock: 85 },
-            { id: 24, name: "Warning Signs Pack", category: "safety", price: 1500, unit: "pcs", stock: 120 },
-            { id: 25, name: "Earth Leakage Protection", category: "safety", price: 15000, unit: "pcs", stock: 20 }
+            // Lighting Design & TV Console
+            { id: 13, name: "LED Strip Light 5M", projectType: "lighting-design", price: 8000, unit: "pcs", stock: 35 },
+            { id: 14, name: "TV Wall Mount Bracket", projectType: "lighting-design", price: 12000, unit: "pcs", stock: 25 },
+            { id: 15, name: "Ambient Lighting Kit", projectType: "lighting-design", price: 25000, unit: "pcs", stock: 12 },
+            
+            // Electric Fence Installation
+            { id: 16, name: "Electric Fence Energizer", projectType: "electric-fence", price: 55000, unit: "pcs", stock: 8 },
+            { id: 17, name: "Fence Wire 1.5mm", projectType: "electric-fence", price: 2500, unit: "meters", stock: 300 },
+            { id: 18, name: "Warning Sign", projectType: "electric-fence", price: 1500, unit: "pcs", stock: 50 },
+            
+            // AC Installation
+            { id: 19, name: "1.5HP Split AC Unit", projectType: "ac-installation", price: 180000, unit: "pcs", stock: 6 },
+            { id: 20, name: "AC Installation Kit", projectType: "ac-installation", price: 12000, unit: "pcs", stock: 15 },
+            { id: 21, name: "Copper Pipe 1/4 inch", projectType: "ac-installation", price: 2500, unit: "meters", stock: 100 },
+            
+            // Generator Installation
+            { id: 22, name: "5KVA Silent Generator", projectType: "generator-installation", price: 450000, unit: "pcs", stock: 4 },
+            { id: 23, name: "ATS Panel", projectType: "generator-installation", price: 75000, unit: "pcs", stock: 8 },
+            { id: 24, name: "Generator Base Frame", projectType: "generator-installation", price: 25000, unit: "pcs", stock: 10 },
+            
+            // Dish Installation
+            { id: 25, name: "DStv HD Decoder", projectType: "dish-installation", price: 35000, unit: "pcs", stock: 15 },
+            { id: 26, name: "Satellite Dish 90cm", projectType: "dish-installation", price: 18000, unit: "pcs", stock: 20 },
+            { id: 27, name: "LNB Twin", projectType: "dish-installation", price: 8000, unit: "pcs", stock: 30 },
+            
+            // Solar Pump Installation
+            { id: 28, name: "1HP Solar Water Pump", projectType: "solar-pump", price: 120000, unit: "pcs", stock: 5 },
+            { id: 29, name: "Solar Pump Controller", projectType: "solar-pump", price: 45000, unit: "pcs", stock: 8 },
+            { id: 30, name: "Submersible Pump Cable", projectType: "solar-pump", price: 1500, unit: "meters", stock: 150 }
         ];
 
         let currentFilter = 'all';
@@ -714,11 +929,28 @@
             updateStats();
             renderItems();
             setupEventListeners();
+            
+            // Hamburger menu toggle
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+            const navOverlay = document.getElementById('navOverlay');
+            
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                navOverlay.classList.toggle('active');
+            });
+            
+            navOverlay.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+                navOverlay.classList.remove('active');
+            });
         });
 
         function updateStats() {
             document.getElementById('totalItems').textContent = databaseItems.length;
-            document.getElementById('categories').textContent = [...new Set(databaseItems.map(item => item.category))].length;
+            document.getElementById('projectTypes').textContent = [...new Set(databaseItems.map(item => item.projectType))].length;
             
             // Calculate average price
             const avgPrice = databaseItems.reduce((sum, item) => sum + item.price, 0) / databaseItems.length;
@@ -785,7 +1017,7 @@
             const newItem = {
                 id: Math.max(...databaseItems.map(item => item.id)) + 1,
                 name: formData.get('itemName'),
-                category: formData.get('itemCategory'),
+                projectType: formData.get('itemProjectType'),
                 price: parseFloat(formData.get('itemPrice')),
                 unit: formData.get('itemUnit'),
                 stock: parseInt(formData.get('itemStock')) || 0
@@ -806,7 +1038,7 @@
             
             // Populate edit form
             document.getElementById('editItemName').value = item.name;
-            document.getElementById('editItemCategory').value = item.category;
+            document.getElementById('editItemProjectType').value = item.projectType;
             document.getElementById('editItemPrice').value = item.price;
             document.getElementById('editItemUnit').value = item.unit;
             document.getElementById('editItemStock').value = item.stock || 0;
@@ -825,7 +1057,7 @@
                 databaseItems[itemIndex] = {
                     ...databaseItems[itemIndex],
                     name: formData.get('editItemName'),
-                    category: formData.get('editItemCategory'),
+                    projectType: formData.get('editItemProjectType'),
                     price: parseFloat(formData.get('editItemPrice')),
                     unit: formData.get('editItemUnit'),
                     stock: parseInt(formData.get('editItemStock')) || 0
@@ -860,10 +1092,10 @@
             const searchTerm = document.getElementById('searchItems').value.toLowerCase();
 
             const filteredItems = databaseItems.filter(item => {
-                const matchesCategory = currentFilter === 'all' || item.category === currentFilter;
+                const matchesProjectType = currentFilter === 'all' || item.projectType === currentFilter;
                 const matchesSearch = item.name.toLowerCase().includes(searchTerm) ||
-                                      item.category.toLowerCase().includes(searchTerm);
-                return matchesCategory && matchesSearch;
+                                      item.projectType.toLowerCase().includes(searchTerm);
+                return matchesProjectType && matchesSearch;
             });
 
             if (filteredItems.length === 0) {
@@ -877,8 +1109,8 @@
 
                 row.insertCell().textContent = item.id;
                 row.insertCell().textContent = item.name;
-                const categoryCell = row.insertCell();
-                categoryCell.innerHTML = `<span class="category-badge category-${item.category}">${item.category}</span>`;
+                const projectTypeCell = row.insertCell();
+                projectTypeCell.innerHTML = `<span class="project-badge project-${item.projectType}">${formatProjectType(item.projectType)}</span>`;
                 row.insertCell().textContent = `₦${item.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
                 row.insertCell().textContent = item.unit;
                 row.insertCell().textContent = item.stock;
@@ -900,6 +1132,23 @@
             });
         }
 
+        function formatProjectType(projectType) {
+            // Convert project type to more readable format
+            const types = {
+                'house-wiring': 'House Wiring',
+                'solar-installation': 'Solar Installation',
+                'cctv-installation': 'CCTV Installation',
+                'smart-home': 'Home Automation',
+                'lighting-design': 'Lighting Design',
+                'electric-fence': 'Electric Fence',
+                'ac-installation': 'AC Installation',
+                'generator-installation': 'Generator Installation',
+                'dish-installation': 'Dish Installation',
+                'solar-pump': 'Solar Pump'
+            };
+            return types[projectType] || projectType;
+        }
+
         function handleSearch(e) {
             renderItems();
         }
@@ -907,7 +1156,7 @@
         function handleFilter(e) {
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
-            currentFilter = e.target.dataset.category;
+            currentFilter = e.target.dataset.projectType;
             renderItems();
         }
 

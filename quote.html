@@ -80,29 +80,37 @@
         }
 
         .btn {
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.25rem;
             border: none;
             border-radius: 5px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             cursor: pointer;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             transition: all 0.3s ease;
+            font-weight: 500;
         }
 
         .btn-primary {
             background: var(--primary);
             color: var(--white);
         }
-
+        .btn-primary:hover{
+            background: var(--white);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
         .btn-secondary {
             background: var(--white);
             color: var(--primary);
             border: 1px solid var(--primary);
         }
-
+        .btn-secondary:hover{
+            background: var(--primary);
+            color: #fff;
+        }
         .btn-success {
             background: var(--success);
             color: var(--white);
@@ -114,8 +122,14 @@
         }
 
         .btn:hover {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0.9;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
         }
 
         .btn:disabled {
@@ -375,8 +389,8 @@
         }
 
         .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.8rem;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.85rem;
         }
 
         /* Quote Summary Sidebar */
@@ -858,6 +872,58 @@
                 gap: 1rem;
             }
         }
+        /* Add this to your CSS section */
+.btn-success.pulse {
+    position: relative;
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 0 0 rgba(40, 167, 69, 0.7);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}
+
+/* For a more modern look, you could also add this alternative pulse effect */
+.btn-success.pulse-alt {
+    animation: pulse-alt 1.5s ease infinite;
+}
+
+@keyframes pulse-alt {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+    }
+}
+
+/* If you want the button to pulse on hover instead of continuously */
+.btn-success.pulse-on-hover:hover {
+    animation: pulse 2s infinite;
+}
+#wizardFinishBtn{
+    border: 1px solid var(--secondary);
+    background: #fff;
+    color: var(--secondary);
+    
+}
+#wizardFinishBtn:hover{
+    color: var(--white);
+    background: var(--secondary);
+}
     </style>
 </head>
 
@@ -1000,10 +1066,54 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="wizardProjectAddress">Project Address *</label>
-                        <textarea id="wizardProjectAddress" required
-                            placeholder="Enter complete project address"></textarea>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="wizardProjectState">State of Project *</label>
+                            <select id="wizardProjectState" required>
+                                <option value="">Select State</option>
+                                <option value="Abia">Abia</option>
+                                <option value="Adamawa">Adamawa</option>
+                                <option value="Akwa Ibom">Akwa Ibom</option>
+                                <option value="Anambra">Anambra</option>
+                                <option value="Bauchi">Bauchi</option>
+                                <option value="Bayelsa">Bayelsa</option>
+                                <option value="Benue">Benue</option>
+                                <option value="Borno">Borno</option>
+                                <option value="Cross River">Cross River</option>
+                                <option value="Delta">Delta</option>
+                                <option value="Ebonyi">Ebonyi</option>
+                                <option value="Edo">Edo</option>
+                                <option value="Ekiti">Ekiti</option>
+                                <option value="Enugu">Enugu</option>
+                                <option value="Gombe">Gombe</option>
+                                <option value="Imo">Imo</option>
+                                <option value="Jigawa">Jigawa</option>
+                                <option value="Kaduna">Kaduna</option>
+                                <option value="Kano">Kano</option>
+                                <option value="Katsina">Katsina</option>
+                                <option value="Kebbi">Kebbi</option>
+                                <option value="Kogi">Kogi</option>
+                                <option value="Kwara">Kwara</option>
+                                <option value="Lagos">Lagos</option>
+                                <option value="Nasarawa">Nasarawa</option>
+                                <option value="Niger">Niger</option>
+                                <option value="Ogun">Ogun</option>
+                                <option value="Ondo">Ondo</option>
+                                <option value="Osun">Osun</option>
+                                <option value="Oyo">Oyo</option>
+                                <option value="Plateau">Plateau</option>
+                                <option value="Rivers">Rivers</option>
+                                <option value="Sokoto">Sokoto</option>
+                                <option value="Taraba">Taraba</option>
+                                <option value="Yobe">Yobe</option>
+                                <option value="Zamfara">Zamfara</option>
+                                <option value="FCT">Federal Capital Territory</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="wizardProjectCity">City/Town *</label>
+                            <input type="text" id="wizardProjectCity" required placeholder="Enter city or town">
+                        </div>
                     </div>
 
                     <div class="form-row">
@@ -1023,8 +1133,8 @@
                     <h2 style="color: var(--secondary); margin-bottom: 1rem;">Client Details</h2>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="wizardClientName">Client Name *</label>
-                            <input type="text" id="wizardClientName" required>
+                            <label for="wizardClientName">Client Name</label>
+                            <input type="text" id="wizardClientName">
                         </div>
                         <div class="form-group">
                             <label for="wizardClientEmail">Client Email</label>
@@ -1038,15 +1148,48 @@
                             <input type="tel" id="wizardClientPhone">
                         </div>
                         <div class="form-group">
-                            <label for="wizardClientAddress">Client Address</label>
-                            <input type="text" id="wizardClientAddress" placeholder="Billing address">
+                            <label for="wizardClientState">Client State</label>
+                            <select id="wizardClientState">
+                                <option value="">Select State</option>
+                                <option value="Abia">Abia</option>
+                                <option value="Adamawa">Adamawa</option>
+                                <option value="Akwa Ibom">Akwa Ibom</option>
+                                <option value="Anambra">Anambra</option>
+                                <option value="Bauchi">Bauchi</option>
+                                <option value="Bayelsa">Bayelsa</option>
+                                <option value="Benue">Benue</option>
+                                <option value="Borno">Borno</option>
+                                <option value="Cross River">Cross River</option>
+                                <option value="Delta">Delta</option>
+                                <option value="Ebonyi">Ebonyi</option>
+                                <option value="Edo">Edo</option>
+                                <option value="Ekiti">Ekiti</option>
+                                <option value="Enugu">Enugu</option>
+                                <option value="Gombe">Gombe</option>
+                                <option value="Imo">Imo</option>
+                                <option value="Jigawa">Jigawa</option>
+                                <option value="Kaduna">Kaduna</option>
+                                <option value="Kano">Kano</option>
+                                <option value="Katsina">Katsina</option>
+                                <option value="Kebbi">Kebbi</option>
+                                <option value="Kogi">Kogi</option>
+                                <option value="Kwara">Kwara</option>
+                                <option value="Lagos">Lagos</option>
+                                <option value="Nasarawa">Nasarawa</option>
+                                <option value="Niger">Niger</option>
+                                <option value="Ogun">Ogun</option>
+                                <option value="Ondo">Ondo</option>
+                                <option value="Osun">Osun</option>
+                                <option value="Oyo">Oyo</option>
+                                <option value="Plateau">Plateau</option>
+                                <option value="Rivers">Rivers</option>
+                                <option value="Sokoto">Sokoto</option>
+                                <option value="Taraba">Taraba</option>
+                                <option value="Yobe">Yobe</option>
+                                <option value="Zamfara">Zamfara</option>
+                                <option value="FCT">Federal Capital Territory</option>
+                            </select>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="wizardClientNotes">Client Notes</label>
-                        <textarea id="wizardClientNotes"
-                            placeholder="Any special billing or PO instructions..."></textarea>
                     </div>
                 </div>
 
@@ -1148,18 +1291,16 @@
                     <h2 style="color: var(--secondary); margin-bottom: 1rem;">Labor Costs</h2>
                     <div class="form-group">
                         <label for="wizardLaborType">Select Labor Type</label>
-                        <div style="display: flex; gap: 1rem;">
-                            <select id="wizardLaborType" style="flex: 1;">
-                                <option value="workforce">Workforce</option>
-                                <option value="logistics">Logistics/Transport</option>
-                                <option value="feeding">Sustenance/Feeding</option>
-                                <option value="accommodation">Accommodation</option>
-                                <option value="tools">Project Tools</option>
-                                <option value="contingency">Contingency Cost</option>
-                                <option value="other">Other</option>
-                            </select>
-                            <button type="button" id="wizardAddLaborBtn" class="btn btn-primary">Add</button>
-                        </div>
+                        <select id="wizardLaborType" style="width: 100%;">
+                            <option value="">Select labor type...</option>
+                            <option value="workforce">Workforce</option>
+                            <option value="logistics">Logistics/Transport</option>
+                            <option value="feeding">Sustenance/Feeding</option>
+                            <option value="accommodation">Accommodation</option>
+                            <option value="tools">Project Tools</option>
+                            <option value="contingency">Contingency Cost</option>
+                            <option value="other">Other</option>
+                        </select>
                     </div>
 
                     <div class="labor-items-container" id="wizardLaborItemsContainer"></div>
@@ -1251,7 +1392,7 @@
                 <div style="margin-left: auto;"></div>
                 <button type="button" class="btn btn-secondary" id="wizardSaveDraftBtn">Save Draft</button>
                 <button type="button" class="btn btn-primary" id="wizardNextBtn">Next</button>
-                <button type="button" class="btn btn-success hidden" id="wizardFinishBtn">Finish & Create Quote</button>
+                <button type="button" class="btn hidden" id="wizardFinishBtn">Finish & Create Quote</button>
             </div>
         </div>
     </div>
@@ -1300,24 +1441,26 @@
             showWizardModal();
             projectSelect();
         });
+        
         function projectSelect() {
-    // Retrieve the projectType from the URL parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedProjectType = urlParams.get('projectType');
+            // Retrieve the projectType from the URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedProjectType = urlParams.get('projectType');
 
-    // Step 1: Set the project type in the project dropdown
-    if (selectedProjectType) {
-        const projectTypeSelect = document.getElementById('wizardProjectType');
-        projectTypeSelect.value = selectedProjectType;  // Set the selected project type in the dropdown
-    }
+            // Step 1: Set the project type in the project dropdown
+            if (selectedProjectType) {
+                const projectTypeSelect = document.getElementById('wizardProjectType');
+                projectTypeSelect.value = selectedProjectType;  // Set the selected project type in the dropdown
+            }
 
-    // Step 3: Set the project type filter for the items section
-    const itemCategorySelect = document.getElementById('wizardItemCategory');
-    if (selectedProjectType) {
-        itemCategorySelect.value = selectedProjectType;
-        populateDatabaseItems(selectedProjectType, '');  // Populating items based on project type
-    }
-}
+            // Step 3: Set the project type filter for the items section
+            const itemCategorySelect = document.getElementById('wizardItemCategory');
+            if (selectedProjectType) {
+                itemCategorySelect.value = selectedProjectType;
+                populateDatabaseItems(selectedProjectType, '');  // Populating items based on project type
+            }
+        }
+        
         function setDefaultDates() {
             const today = new Date();
             const validUntil = new Date();
@@ -1382,7 +1525,14 @@
             });
 
             document.getElementById('wizardAddItemBtn').addEventListener('click', addItem);
-            document.getElementById('wizardAddLaborBtn').addEventListener('click', addLaborItem);
+            
+            // Automatically add labor item when selected from dropdown
+            document.getElementById('wizardLaborType').addEventListener('change', function() {
+                if (this.value) {
+                    addLaborItem();
+                    this.value = ''; // Reset the dropdown
+                }
+            });
 
             document.getElementById('wizardItemDescription').addEventListener('input', checkAddItemButtonStatus);
             document.getElementById('wizardItemQuantity').addEventListener('input', checkAddItemButtonStatus);
@@ -1507,103 +1657,88 @@
         }
 
         // Function to render all labor items in the UI
-function renderLaborItems() {
-    const container = document.getElementById('wizardLaborItemsContainer');
-    container.innerHTML = laborItems.map(item => {
-        item.amount = item.quantity * item.rate * item.days;
-        return `
-            <div class="labor-item" data-item-id="${item.id}" style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                    <span style="font-weight: 600;">${item.name}</span>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 0.5rem;">
-                    <div class="form-group">
-                        <label>Quantity</label>
-                        <input type="number" value="${item.quantity}" min="1" 
-                            oninput="updateLaborItem(${item.id}, 'quantity', this.value)"
-                            class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label>Rate (₦)</label>
-                        <div style="position: relative;">
-                            <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);">₦</span>
-                            <input type="number" value="${item.rate}" min="0" step="0.01" 
-                                oninput="updateLaborItem(${item.id}, 'rate', this.value)"
-                                style="padding-left: 25px;" class="form-control">
+        function renderLaborItems() {
+            const container = document.getElementById('wizardLaborItemsContainer');
+            container.innerHTML = laborItems.map(item => {
+                item.amount = item.quantity * item.rate * item.days;
+                return `
+                    <div class="labor-item" data-item-id="${item.id}" style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 600;">${item.name}</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 0.5rem;">
+                            <div class="form-group">
+                                <label>Quantity</label>
+                                <input type="number" value="${item.quantity}" min="1" 
+                                    oninput="updateLaborItem(${item.id}, 'quantity', this.value)"
+                                    class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Rate (₦)</label>
+                                <div style="position: relative;">
+                                    <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);">₦</span>
+                                    <input type="number" value="${item.rate}" min="0" step="0.01" 
+                                        oninput="updateLaborItem(${item.id}, 'rate', this.value)"
+                                        style="padding-left: 25px;" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Days</label>
+                                <input type="number" value="${item.days}" min="1" 
+                                    oninput="updateLaborItem(${item.id}, 'days', this.value)"
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div id="total" style="font-weight: 600;">
+                                Total: ₦${item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                            </div>
+                            <button type="button" class="btn btn-danger" onclick="removeLaborItem(${item.id})">Remove</button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>Days</label>
-                        <input type="number" value="${item.days}" min="1" 
-                            oninput="updateLaborItem(${item.id}, 'days', this.value)"
-                            class="form-control">
-                    </div>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div id="total" style="font-weight: 600;">
-                        Total: ₦${item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    </div>
-                    <button type="button" class="btn btn-danger" onclick="removeLaborItem(${item.id})">Remove</button>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-
- function updateLaborItem(itemId, field, value) {
-    const laborItem = laborItems.find(item => item.id === itemId);
-    if (laborItem) {
-        // Update the respective field based on input
-        if (field === 'quantity') {
-            laborItem.quantity = parseFloat(value) || 1;
-        } else if (field === 'rate') {
-            laborItem.rate = parseFloat(value) || 0;
-        } else if (field === 'days') {
-            laborItem.days = parseFloat(value) || 1;
+                `;
+            }).join('');
         }
 
-        // Recalculate the amount based on the inputs
-        laborItem.amount = laborItem.quantity * laborItem.rate * laborItem.days;
+        function updateLaborItem(itemId, field, value) {
+            const laborItem = laborItems.find(item => item.id === itemId);
+            if (laborItem) {
+                // Update the respective field based on input
+                if (field === 'quantity') {
+                    laborItem.quantity = parseFloat(value) || 1;
+                } else if (field === 'rate') {
+                    laborItem.rate = parseFloat(value) || 0;
+                } else if (field === 'days') {
+                    laborItem.days = parseFloat(value) || 1;
+                }
 
-        // Try to find the labor item row
-        const laborRow = document.querySelector(`[data-item-id="${itemId}"]`);
-        
-        if (laborRow) { // Only update if laborRow is found
-            laborRow.querySelector('#total').textContent = `₦${laborItem.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-        } else {
-            console.warn(`Labor row with itemId ${itemId} not found`);
+                // Recalculate the amount based on the inputs
+                laborItem.amount = laborItem.quantity * laborItem.rate * laborItem.days;
+
+                // Try to find the labor item row
+                const laborRow = document.querySelector(`[data-item-id="${itemId}"]`);
+                
+                if (laborRow) { // Only update if laborRow is found
+                    laborRow.querySelector('#total').textContent = `₦${laborItem.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+                } else {
+                    console.warn(`Labor row with itemId ${itemId} not found`);
+                }
+
+                // Recalculate and update the total labor cost immediately
+                calculateLaborTotal();
+
+                // Recalculate the overall totals (materials + labor + profit)
+                calculateTotals();
+            }
         }
 
-        // Recalculate and update the total labor cost immediately
-        calculateLaborTotal();
+        function calculateLaborTotal() {
+            // Sum the amount for all labor items
+            const totalLabor = laborItems.reduce((sum, item) => sum + item.amount, 0);
 
-        // Recalculate the overall totals (materials + labor + profit)
-        calculateTotals();
-    }
-}
-
-
-// Function to calculate total labor cost
-function calculateLaborTotal() {
-    const totalLabor = laborItems.reduce((sum, item) => sum + item.amount, 0);
-
-    // Update the labor total displayed in the summary
-    document.getElementById('labor').textContent = `₦${totalLabor.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-}
-
-
-
-function calculateLaborTotal() {
-    // Sum the amount for all labor items
-    const totalLabor = laborItems.reduce((sum, item) => sum + item.amount, 0);
-
-    // Update the labor total in the summary section
-    document.getElementById('labor').textContent = `₦${totalLabor.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-}
-
-
-
+            // Update the labor total in the summary section
+            document.getElementById('labor').textContent = `₦${totalLabor.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+        }
 
         function removeLaborItem(itemId) {
             laborItems = laborItems.filter(item => item.id !== itemId);
@@ -1652,8 +1787,7 @@ function calculateLaborTotal() {
             `).join('');
         }
 
-        // Function to calculate all totals, including material, labor, and profit
-function calculateTotals() {
+        function calculateTotals() {
     // Calculate subtotal for materials and labor
     const materialsSubtotal = quoteItems.reduce((sum, item) => sum + item.amount, 0);
     const laborTotal = laborItems.reduce((sum, item) => sum + item.amount, 0);
@@ -1673,24 +1807,22 @@ function calculateTotals() {
     // Calculate the final total amount
     const totalAmount = subtotal + profitAmount;
 
-    // Update the summary section with the new totals
+    // Update all summary displays
     document.getElementById('subtotal').textContent = `₦${materialsSubtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     document.getElementById('labor').textContent = `₦${laborTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     document.getElementById('profit').textContent = `₦${profitAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     document.getElementById('totalAmount').textContent = `₦${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
-    // Update the financial summary as well
+    // Update the financial summary
     document.getElementById('materialsSubtotal').textContent = `₦${materialsSubtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     document.getElementById('laborSubtotal').textContent = `₦${laborTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     document.getElementById('financialProfit').textContent = `₦${profitAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
     document.getElementById('financialTotalAmount').textContent = `₦${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+
+    // Update the profit goals section displays
+    document.getElementById('profitSubtotalDisplay').textContent = `₦${subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    document.getElementById('profitAmountDisplay').textContent = `₦${profitAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 }
-
-
-
-
-
-
 
         document.getElementById('wizardProfitMethod').addEventListener('change', function () {
             const profitValueInput = document.getElementById('wizardProfitValue');
@@ -1734,50 +1866,54 @@ function calculateTotals() {
             document.body.style.overflow = '';
         }
 
-        function updateWizardUI() {
-            wizardSteps.querySelectorAll('.wizard-step').forEach(stepEl => {
-                const stepNum = parseInt(stepEl.dataset.step);
-                stepEl.classList.remove('active', 'completed');
-                if (stepNum < currentStep) {
-                    stepEl.classList.add('completed');
-                } else if (stepNum === currentStep) {
-                    stepEl.classList.add('active');
-                }
-            });
-
-            wizardPages.forEach(page => {
-                if (parseInt(page.dataset.stepPage) === currentStep) {
-                    page.classList.add('active');
-                } else {
-                    page.classList.remove('active');
-                }
-            });
-
-            wizardPrevBtn.disabled = currentStep === 1;
-            wizardNextBtn.classList.toggle('hidden', currentStep === totalSteps);
-            wizardFinishBtn.classList.toggle('hidden', currentStep !== totalSteps);
-
-            if (currentStep === 5) {
-                updateSummaryStep();
-            }
+        // In the updateWizardUI function, modify the button visibility and disabled state
+function updateWizardUI() {
+    wizardSteps.querySelectorAll('.wizard-step').forEach(stepEl => {
+        const stepNum = parseInt(stepEl.dataset.step);
+        stepEl.classList.remove('active', 'completed');
+        if (stepNum < currentStep) {
+            stepEl.classList.add('completed');
+        } else if (stepNum === currentStep) {
+            stepEl.classList.add('active');
         }
+    });
+
+    wizardPages.forEach(page => {
+        if (parseInt(page.dataset.stepPage) === currentStep) {
+            page.classList.add('active');
+        } else {
+            page.classList.remove('active');
+        }
+    });
+
+    wizardPrevBtn.disabled = currentStep === 1;
+    wizardNextBtn.classList.toggle('hidden', currentStep === totalSteps);
+    wizardFinishBtn.classList.toggle('hidden', currentStep !== totalSteps);
+    
+    // Disable Finish button unless we're on the last step
+    wizardFinishBtn.disabled = currentStep !== totalSteps;
+
+    if (currentStep === 5) {
+        updateSummaryStep();
+    }
+}
 
         function updateSummaryStep() {
             const projectDetails = document.getElementById('summaryProjectDetails');
             projectDetails.innerHTML = `
                 <p><strong>Project:</strong> ${document.getElementById('wizardProjectName').value}</p>
                 <p><strong>Type:</strong> ${document.getElementById('wizardProjectType').options[document.getElementById('wizardProjectType').selectedIndex].text}</p>
-                <p><strong>Address:</strong> ${document.getElementById('wizardProjectAddress').value}</p>
+                <p><strong>Location:</strong> ${document.getElementById('wizardProjectCity').value}, ${document.getElementById('wizardProjectState').value}</p>
                 <p><strong>Quote Date:</strong> ${document.getElementById('wizardQuoteDate').value}</p>
                 <p><strong>Valid Until:</strong> ${document.getElementById('wizardValidUntil').value}</p>
             `;
 
             const clientDetails = document.getElementById('summaryClientDetails');
             clientDetails.innerHTML = `
-                <p><strong>Client:</strong> ${document.getElementById('wizardClientName').value}</p>
+                <p><strong>Client:</strong> ${document.getElementById('wizardClientName').value || 'N/A'}</p>
                 <p><strong>Email:</strong> ${document.getElementById('wizardClientEmail').value || 'N/A'}</p>
                 <p><strong>Phone:</strong> ${document.getElementById('wizardClientPhone').value || 'N/A'}</p>
-                <p><strong>Address:</strong> ${document.getElementById('wizardClientAddress').value || 'N/A'}</p>
+                <p><strong>State:</strong> ${document.getElementById('wizardClientState').value || 'N/A'}</p>
             `;
 
             calculateTotals();
@@ -1802,72 +1938,73 @@ function calculateTotals() {
         }
 
         function validateCurrentStep() {
-            switch (currentStep) {
-                case 1:
-                    if (!document.getElementById('wizardProjectType').value) {
-                        showToast('Please select a project type', 'error');
-                        return false;
-                    }
-                    if (!document.getElementById('wizardProjectName').value.trim()) {
-                        showToast('Please enter a project name', 'error');
-                        return false;
-                    }
-                    if (!document.getElementById('wizardProjectAddress').value.trim()) {
-                        showToast('Please enter a project address', 'error');
-                        return false;
-                    }
-                    break;
-                case 2:
-                    if (!document.getElementById('wizardClientName').value.trim()) {
-                        showToast('Please enter a client name', 'error');
-                        return false;
-                    }
-                    break;
-                case 3:
-                    if (quoteItems.length === 0) {
-                        showToast('Please add at least one item to the quote', 'error');
-                        return false;
-                    }
-                    break;
+    switch (currentStep) {
+        case 1:
+            if (!document.getElementById('wizardProjectType').value) {
+                showToast('Please select a project type', 'error');
+                return false;
             }
-            return true;
-        }
+            if (!document.getElementById('wizardProjectName').value.trim()) {
+                showToast('Please enter a project name', 'error');
+                return false;
+            }
+            if (!document.getElementById('wizardProjectState').value.trim()) {
+                showToast('Please select a project state', 'error');
+                return false;
+            }
+            if (!document.getElementById('wizardProjectCity').value.trim()) {
+                showToast('Please enter a project city/town', 'error');
+                return false;
+            }
+            break;
+        case 3:
+            if (quoteItems.length === 0) {
+                showToast('Please add at least one item to the quote', 'error');
+                return false;
+            }
+            break;
+        case 6: // Additional validation for the final step if needed
+            // You can add any final validation here
+            break;
+    }
+    return true;
+}
 
         // Finalize the wizard, generate the quote data for saving or displaying
-function finishWizard() {
-    if (validateCurrentStep()) {
-        const quoteData = {
-            project: {
-                type: document.getElementById('wizardProjectType').value,
-                name: document.getElementById('wizardProjectName').value,
-                address: document.getElementById('wizardProjectAddress').value,
-                quoteDate: document.getElementById('wizardQuoteDate').value,
-                validUntil: document.getElementById('wizardValidUntil').value
-            },
-            client: {
-                name: document.getElementById('wizardClientName').value,
-                email: document.getElementById('wizardClientEmail').value,
-                phone: document.getElementById('wizardClientPhone').value,
-                address: document.getElementById('wizardClientAddress').value,
-                notes: document.getElementById('wizardClientNotes').value
-            },
-            items: quoteItems,
-            labor: laborItems,
-            notes: document.getElementById('summaryNotes').value,
-            totals: {
-                materials: parseFloat(document.getElementById('materialsSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
-                labor: parseFloat(document.getElementById('laborSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
-                subtotal: parseFloat(document.getElementById('subtotal').textContent.replace('₦', '').replace(/,/g, '')),
-                profit: parseFloat(document.getElementById('profit').textContent.replace('₦', '').replace(/,/g, '')),
-                total: parseFloat(document.getElementById('totalAmount').textContent.replace('₦', '').replace(/,/g, ''))
-            }
-        };
+        function finishWizard() {
+            if (validateCurrentStep()) {
+                const quoteData = {
+                    project: {
+                        type: document.getElementById('wizardProjectType').value,
+                        name: document.getElementById('wizardProjectName').value,
+                        state: document.getElementById('wizardProjectState').value,
+                        city: document.getElementById('wizardProjectCity').value,
+                        quoteDate: document.getElementById('wizardQuoteDate').value,
+                        validUntil: document.getElementById('wizardValidUntil').value
+                    },
+                    client: {
+                        name: document.getElementById('wizardClientName').value,
+                        email: document.getElementById('wizardClientEmail').value,
+                        phone: document.getElementById('wizardClientPhone').value,
+                        state: document.getElementById('wizardClientState').value
+                    },
+                    items: quoteItems,
+                    labor: laborItems,
+                    notes: document.getElementById('summaryNotes').value,
+                    totals: {
+                        materials: parseFloat(document.getElementById('materialsSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                        labor: parseFloat(document.getElementById('laborSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                        subtotal: parseFloat(document.getElementById('subtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                        profit: parseFloat(document.getElementById('profit').textContent.replace('₦', '').replace(/,/g, '')),
+                        total: parseFloat(document.getElementById('totalAmount').textContent.replace('₦', '').replace(/,/g, ''))
+                    }
+                };
 
-        console.log('Quote Data:', quoteData);
-        showToast('Quote created successfully!', 'success');
-        hideWizardModal();
-    }
-}
+                console.log('Quote Data:', quoteData);
+                // showToast('Quote created successfully!', 'success');
+                hideWizardModal();
+            }
+        }
 
         function hideWizardModal() {
             // Close the modal
@@ -1876,14 +2013,13 @@ function finishWizard() {
             document.body.style.overflow = ''; // Allow scrolling again
         }
 
-
-
         function saveDraft() {
             const quoteData = {
                 project: {
                     type: document.getElementById('wizardProjectType').value,
                     name: document.getElementById('wizardProjectName').value,
-                    address: document.getElementById('wizardProjectAddress').value,
+                    state: document.getElementById('wizardProjectState').value,
+                    city: document.getElementById('wizardProjectCity').value,
                     quoteDate: document.getElementById('wizardQuoteDate').value,
                     validUntil: document.getElementById('wizardValidUntil').value
                 },
@@ -1891,18 +2027,17 @@ function finishWizard() {
                     name: document.getElementById('wizardClientName').value,
                     email: document.getElementById('wizardClientEmail').value,
                     phone: document.getElementById('wizardClientPhone').value,
-                    address: document.getElementById('wizardClientAddress').value,
-                    notes: document.getElementById('wizardClientNotes').value
+                    state: document.getElementById('wizardClientState').value
                 },
                 items: quoteItems,
                 labor: laborItems,
                 notes: document.getElementById('summaryNotes').value,
                 totals: {
-                    materials: parseFloat(document.getElementById('summaryMaterialsSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
-                    labor: parseFloat(document.getElementById('summaryLaborSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
-                    subtotal: parseFloat(document.getElementById('summarySubtotal').textContent.replace('₦', '').replace(/,/g, '')),
-                    vat: parseFloat(document.getElementById('summaryVat').textContent.replace('₦', '').replace(/,/g, '')),
-                    total: parseFloat(document.getElementById('summaryTotalAmount').textContent.replace('₦', '').replace(/,/g, ''))
+                    materials: parseFloat(document.getElementById('materialsSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                    labor: parseFloat(document.getElementById('laborSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                    subtotal: parseFloat(document.getElementById('subtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                    profit: parseFloat(document.getElementById('profit').textContent.replace('₦', '').replace(/,/g, '')),
+                    total: parseFloat(document.getElementById('totalAmount').textContent.replace('₦', '').replace(/,/g, ''))
                 }
             };
 
@@ -1917,12 +2052,12 @@ function finishWizard() {
 
             document.getElementById('wizardProjectType').value = '';
             document.getElementById('wizardProjectName').value = '';
-            document.getElementById('wizardProjectAddress').value = '';
+            document.getElementById('wizardProjectState').value = '';
+            document.getElementById('wizardProjectCity').value = '';
             document.getElementById('wizardClientName').value = '';
             document.getElementById('wizardClientEmail').value = '';
             document.getElementById('wizardClientPhone').value = '';
-            document.getElementById('wizardClientAddress').value = '';
-            document.getElementById('wizardClientNotes').value = '';
+            document.getElementById('wizardClientState').value = '';
             document.getElementById('summaryNotes').value = '';
 
             document.getElementById('wizardItemsTableBody').innerHTML = `
