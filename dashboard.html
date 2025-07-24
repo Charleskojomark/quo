@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuotePaddy - Admin Database Manager</title>
+    <style>
+        /* Universal Box-Sizing and Base Styles */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CSS Variables */
+        :root {
+            --primary: #2351D8;
+            --secondary: #01005D;
+            --white: #FFFFFF;
+            --dark: #121212;
+            --light-gray: #f8f9fa;
+            --border-color: #e1e5e9;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .admin-badge {
+            background: var(--warning);
+            color: var(--dark);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .page-header {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Database Management Section */
+        .database-manager {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .database-content {
+            padding: 2rem;
+        }
+
+        /* Add Item Form */
+        .add-item-form {
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px dashed var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .add-item-form.active {
+            border-color: var(--primary);
+            background: rgba(35, 81, 216, 0.05);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(35, 81, 216, 0.1);
+        }
+
+        /* Filter and Search */
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-group {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-group input {
+            padding-left: 2.5rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        /* Items Table */
+        .items-table-container {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .items-table th {
+            background: var(--light-gray);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--secondary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+        }
+
+        .items-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .items-table tr:hover {
+            background: rgba(35, 81, 216, 0.05);
+        }
+
+        .category-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .category-lighting { background: #ffeaa7; color: #2d3436; }
+        .category-cabling { background: #81ecec; color: #2d3436; }
+        .category-conduiting { background: #fab1a0; color: #2d3436; }
+        .category-control { background: #a29bfe; color: #2d3436; }
+        .category-safety { background: #fd79a8; color: #2d3436; }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Success/Error Messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-group {
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .items-table {
+                font-size: 0.85rem;
+            }
+
+            .items-table th,
+            .items-table td {
+                padding: 0.7rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                QuotePaddy
+                <span class="admin-badge">ADMIN</span>
+            </a>
+            
+            <nav class="nav-links">
+                <a href="#" class="btn btn-secondary">📊 Dashboard</a> 
+                <a href="#" class="btn btn-secondary">📋 View Quotes</a>
+                <a href="#" class="btn btn-secondary">👥 Users</a>
+                <a href="#" class="btn btn-primary">🔙 Back to App</a>
+                <a href="#" class="btn btn-danger">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">Database Manager</h1>
+            <p class="page-subtitle">Manage electrical components, pricing, and inventory for the quotation system</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalItems">25</div>
+                <div class="stat-label">Total Items</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="categories">5</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="recentlyAdded">3</div>
+                <div class="stat-label">Added This Week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgPrice">₦6,250</div>
+                <div class="stat-label">Average Price</div>
+            </div>
+        </div>
+
+        <div class="database-manager">
+            <div class="section-header">
+                <h2 class="section-title">Electrical Components Database</h2>
+                <button class="btn btn-success" id="toggleAddForm">➕ Add New Item</button>
+            </div>
+
+            <div class="database-content">
+                <div class="alert alert-success" id="successAlert">
+                    <strong>Success!</strong> <span id="successMessage"></span>
+                </div>
+                
+                <div class="alert alert-danger" id="errorAlert">
+                    <strong>Error!</strong> <span id="errorMessage"></span>
+                </div>
+
+                <div class="add-item-form" id="addItemForm" style="display: none;">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--secondary);">Add New Component</h3>
+                    
+                    <form id="newItemForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="itemName">Item Name *</label>
+                                <input type="text" id="itemName" name="itemName" required placeholder="e.g., LED Ceiling Light 20W">
+                            </div>
+                            <div class="form-group">
+                                <label for="itemCategory">Category *</label>
+                                <select id="itemCategory" name="itemCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option value="lighting">Lighting</option>
+                                    <option value="cabling">Cabling</option>
+                                    <option value="conduiting">Conduiting</option>
+                                    <option value="control">Control Systems</option>
+                                    <option value="safety">Safety Equipment</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="itemPrice">Price (₦) *</label>
+                                <input type="number" id="itemPrice" name="itemPrice" step="0.01" min="0" required placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="itemUnit">Unit *</label>
+                                <select id="itemUnit" name="itemUnit" required>
+                                    <option value="pcs">Pieces</option>
+                                    <option value="meters">Meters</option>
+                                    <option value="hours">Hours</option>
+                                    <option value="sqm">Sq. Meters</option>
+                                    <option value="feet">Feet</option>
+                                    <option value="kg">Kilograms</option>
+                                    <option value="liters">Liters</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="itemStock">Stock Qty</label>
+                                <input type="number" id="itemStock" name="itemStock" min="0" placeholder="Optional">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success">Add Item</button>
+                                <button type="button" class="btn btn-secondary" id="cancelAdd">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="filter-section">
+                    <div class="search-group">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchItems" placeholder="Search items by name or description...">
+                    </div>
+                    
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-category="all">All Items</button>
+                        <button class="filter-btn" data-category="lighting">Lighting</button>
+                        <button class="filter-btn" data-category="cabling">Cabling</button>
+                        <button class="filter-btn" data-category="conduiting">Conduiting</button>
+                        <button class="filter-btn" data-category="control">Control</button>
+                        <button class="filter-btn" data-category="safety">Safety</button>
+                    </div>
+                </div>
+
+                <div class="items-table-container">
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Item Name</th>
+                                <th>Category</th>
+                                <th>Price (₦)</th>
+                                <th>Unit</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Item</h3>
+                <button class="close-btn" id="closeEditModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editItemForm">
+                    <div class="form-group">
+                        <label for="editItemName">Item Name *</label>
+                        <input type="text" id="editItemName" name="editItemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editItemCategory">Category *</label>
+                        <select id="editItemCategory" name="editItemCategory" required>
+                            <option value="lighting">Lighting</option>
+                            <option value="cabling">Cabling</option>
+                            <option value="conduiting">Conduiting</option>
+                            <option value="control">Control Systems</option>
+                            <option value="safety">Safety Equipment</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editItemPrice">Price (₦) *</label>
+                        <input type="number" id="editItemPrice" name="editItemPrice" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editItemUnit">Unit *</label>
+                        <select id="editItemUnit" name="editItemUnit" required>
+                            <option value="pcs">Pieces</option>
+                            <option value="meters">Meters</option>
+                            <option value="hours">Hours</option>
+                            <option value="sqm">Sq. Meters</option>
+                            <option value="feet">Feet</option>
+                            <option value="kg">Kilograms</option>
+                            <option value="liters">Liters</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editItemStock">Stock Quantity</label>
+                        <input type="number" id="editItemStock" name="editItemStock" min="0">
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-success" style="flex: 1;">Update Item</button>
+                        <button type="button" class="btn btn-secondary" id="cancelEdit" style="flex: 1;">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample database items (same as original, with added stock field)
+        let databaseItems = [
+            // Lighting
+            { id: 1, name: "LED Ceiling Light 20W", category: "lighting", price: 5000, unit: "pcs", stock: 45 },
+            { id: 2, name: "Fluorescent Tube Light 40W", category: "lighting", price: 3500, unit: "pcs", stock: 32 },
+            { id: 3, name: "Wall Socket 13A", category: "lighting", price: 1200, unit: "pcs", stock: 150 },
+            { id: 4, name: "Light Switch Single Gang", category: "lighting", price: 800, unit: "pcs", stock: 200 },
+            { id: 5, name: "Emergency Exit Light", category: "lighting", price: 15000, unit: "pcs", stock: 12 },
+            
+            // Cabling
+            { id: 6, name: "PVC Cable 2.5mm Twin & Earth", category: "cabling", price: 450, unit: "meters", stock: 500 },
+            { id: 7, name: "Armoured Cable 4mm SWA", category: "cabling", price: 850, unit: "meters", stock: 300 },
+            { id: 8, name: "Cat6 Network Cable", category: "cabling", price: 300, unit: "meters", stock: 1000 },
+            { id: 9, name: "Coaxial Cable RG6", category: "cabling", price: 200, unit: "meters", stock: 750 },
+            { id: 10, name: "Fire Resistant Cable", category: "cabling", price: 1200, unit: "meters", stock: 250 },
+            
+            // Conduiting
+            { id: 11, name: "PVC Conduit 20mm", category: "conduiting", price: 150, unit: "meters", stock: 800 },
+            { id: 12, name: "Metal Conduit 25mm", category: "conduiting", price: 400, unit: "meters", stock: 400 },
+            { id: 13, name: "Cable Tray 300mm", category: "conduiting", price: 2500, unit: "meters", stock: 100 },
+            { id: 14, name: "Conduit Bends 20mm", category: "conduiting", price: 80, unit: "pcs", stock: 300 },
+            { id: 15, name: "Junction Box Plastic", category: "conduiting", price: 250, unit: "pcs", stock: 180 },
+            
+            // Control Systems
+            { id: 16, name: "MCB 32A Single Pole", category: "control", price: 2500, unit: "pcs", stock: 75 },
+            { id: 17, name: "RCD 63A 30mA", category: "control", price: 8500, unit: "pcs", stock: 25 },
+            { id: 18, name: "Contactor 25A", category: "control", price: 12000, unit: "pcs", stock: 30 },
+            { id: 19, name: "Timer Switch", category: "control", price: 4500, unit: "pcs", stock: 40 },
+            { id: 20, name: "Distribution Board 12 Way", category: "control", price: 25000, unit: "pcs", stock: 15 },
+            
+            // Safety Equipment
+            { id: 21, name: "Smoke Detector", category: "safety", price: 8000, unit: "pcs", stock: 60 },
+            { id: 22, name: "Fire Extinguisher Point", category: "safety", price: 3500, unit: "pcs", stock: 35 },
+            { id: 23, name: "Emergency Push Button", category: "safety", price: 2200, unit: "pcs", stock: 85 },
+            { id: 24, name: "Warning Signs Pack", category: "safety", price: 1500, unit: "pcs", stock: 120 },
+            { id: 25, name: "Earth Leakage Protection", category: "safety", price: 15000, unit: "pcs", stock: 20 }
+        ];
+
+        let currentFilter = 'all';
+        let editingItemId = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            renderItems();
+            setupEventListeners();
+        });
+
+        function updateStats() {
+            document.getElementById('totalItems').textContent = databaseItems.length;
+            document.getElementById('categories').textContent = [...new Set(databaseItems.map(item => item.category))].length;
+            
+            // Calculate average price
+            const avgPrice = databaseItems.reduce((sum, item) => sum + item.price, 0) / databaseItems.length;
+            document.getElementById('avgPrice').textContent = `₦${avgPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+            
+            // Mock recently added count
+            document.getElementById('recentlyAdded').textContent = Math.floor(Math.random() * 5) + 1;
+        }
+
+        function setupEventListeners() {
+            // Toggle add form
+            document.getElementById('toggleAddForm').addEventListener('click', toggleAddForm);
+            document.getElementById('cancelAdd').addEventListener('click', hideAddForm);
+
+            // Form submissions
+            document.getElementById('newItemForm').addEventListener('submit', addNewItem);
+            document.getElementById('editItemForm').addEventListener('submit', updateItem);
+
+            // Search and filter
+            document.getElementById('searchItems').addEventListener('input', handleSearch);
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', handleFilter);
+            });
+
+            // Modal controls
+            document.getElementById('closeEditModal').addEventListener('click', closeEditModal);
+            document.getElementById('cancelEdit').addEventListener('click', closeEditModal);
+            document.getElementById('editModal').addEventListener('click', function(e) {
+                if (e.target === this) closeEditModal();
+            });
+        }
+
+        function toggleAddForm() {
+            const form = document.getElementById('addItemForm');
+            const btn = document.getElementById('toggleAddForm');
+            
+            if (form.style.display === 'none' || !form.style.display) {
+                form.style.display = 'block';
+                form.classList.add('active');
+                btn.textContent = '❌ Cancel Add';
+                btn.className = 'btn btn-danger';
+            } else {
+                hideAddForm();
+            }
+        }
+
+        function hideAddForm() {
+            const form = document.getElementById('addItemForm');
+            const btn = document.getElementById('toggleAddForm');
+            
+            form.style.display = 'none';
+            form.classList.remove('active');
+            btn.textContent = '➕ Add New Item';
+            btn.className = 'btn btn-success';
+            
+            // Reset form
+            document.getElementById('newItemForm').reset();
+        }
+
+        function addNewItem(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const newItem = {
+                id: Math.max(...databaseItems.map(item => item.id)) + 1,
+                name: formData.get('itemName'),
+                category: formData.get('itemCategory'),
+                price: parseFloat(formData.get('itemPrice')),
+                unit: formData.get('itemUnit'),
+                stock: parseInt(formData.get('itemStock')) || 0
+            };
+
+            databaseItems.push(newItem);
+            updateStats();
+            renderItems();
+            hideAddForm();
+            showAlert('success', `Item "${newItem.name}" has been added successfully!`);
+        }
+
+        function editItem(id) {
+            const item = databaseItems.find(item => item.id === id);
+            if (!item) return;
+
+            editingItemId = id;
+            
+            // Populate edit form
+            document.getElementById('editItemName').value = item.name;
+            document.getElementById('editItemCategory').value = item.category;
+            document.getElementById('editItemPrice').value = item.price;
+            document.getElementById('editItemUnit').value = item.unit;
+            document.getElementById('editItemStock').value = item.stock || 0;
+            
+            // Show modal
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        function updateItem(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const itemIndex = databaseItems.findIndex(item => item.id === editingItemId);
+
+            if (itemIndex > -1) {
+                databaseItems[itemIndex] = {
+                    ...databaseItems[itemIndex],
+                    name: formData.get('editItemName'),
+                    category: formData.get('editItemCategory'),
+                    price: parseFloat(formData.get('editItemPrice')),
+                    unit: formData.get('editItemUnit'),
+                    stock: parseInt(formData.get('editItemStock')) || 0
+                };
+                updateStats();
+                renderItems();
+                closeEditModal();
+                showAlert('success', `Item "${databaseItems[itemIndex].name}" has been updated successfully!`);
+            } else {
+                showAlert('danger', 'Error: Item not found for update.');
+            }
+        }
+
+        function deleteItem(id) {
+            if (confirm('Are you sure you want to delete this item? This action cannot be undone.')) {
+                const initialLength = databaseItems.length;
+                databaseItems = databaseItems.filter(item => item.id !== id);
+                if (databaseItems.length < initialLength) {
+                    updateStats();
+                    renderItems();
+                    showAlert('success', 'Item deleted successfully!');
+                } else {
+                    showAlert('danger', 'Error: Item could not be deleted.');
+                }
+            }
+        }
+
+        function renderItems() {
+            const tableBody = document.getElementById('itemsTableBody');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            const searchTerm = document.getElementById('searchItems').value.toLowerCase();
+
+            const filteredItems = databaseItems.filter(item => {
+                const matchesCategory = currentFilter === 'all' || item.category === currentFilter;
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm) ||
+                                      item.category.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filteredItems.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 2rem;">No items found matching your criteria.</td></tr>`;
+                return;
+            }
+
+            filteredItems.forEach(item => {
+                const row = tableBody.insertRow();
+                row.classList.add('fade-in'); // Add fade-in animation
+
+                row.insertCell().textContent = item.id;
+                row.insertCell().textContent = item.name;
+                const categoryCell = row.insertCell();
+                categoryCell.innerHTML = `<span class="category-badge category-${item.category}">${item.category}</span>`;
+                row.insertCell().textContent = `₦${item.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+                row.insertCell().textContent = item.unit;
+                row.insertCell().textContent = item.stock;
+
+                const actionsCell = row.insertCell();
+                actionsCell.classList.add('action-buttons');
+                const editBtn = document.createElement('button');
+                editBtn.className = 'btn btn-info btn-sm';
+                editBtn.textContent = 'Edit';
+                editBtn.onclick = () => editItem(item.id);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn btn-danger btn-sm';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = () => deleteItem(item.id);
+
+                actionsCell.appendChild(editBtn);
+                actionsCell.appendChild(deleteBtn);
+            });
+        }
+
+        function handleSearch(e) {
+            renderItems();
+        }
+
+        function handleFilter(e) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            currentFilter = e.target.dataset.category;
+            renderItems();
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+            editingItemId = null;
+            document.getElementById('editItemForm').reset();
+        }
+
+        function showAlert(type, message) {
+            const successAlert = document.getElementById('successAlert');
+            const errorAlert = document.getElementById('errorAlert');
+            
+            // Hide both first
+            successAlert.classList.remove('show');
+            errorAlert.classList.remove('show');
+
+            if (type === 'success') {
+                document.getElementById('successMessage').textContent = message;
+                successAlert.classList.add('show');
+            } else if (type === 'danger') {
+                document.getElementById('errorMessage').textContent = message;
+                errorAlert.classList.add('show');
+            }
+
+            // Automatically hide after 5 seconds
+            setTimeout(() => {
+                successAlert.classList.remove('show');
+                errorAlert.classList.remove('show');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

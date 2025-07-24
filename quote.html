@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuotePaddy - Create New Quote</title>
+    <link rel="shortcut icon" href="quoteicon.png" type="image/x-icon">
+    <style>
+        /* Universal Box-Sizing and Base Styles */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CSS Variables */
+        :root {
+            --primary: #2351D8;
+            --secondary: #01005D;
+            --white: #FFFFFF;
+            --dark: #121212;
+            --light-gray: #f8f9fa;
+            --border-color: #e1e5e9;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 180px;
+        }
+
+        /* Desktop User Menu */
+        .desktop-nav .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .desktop-nav .user-menu span {
+            display: block;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 25px;
+            height: 20px;
+            cursor: pointer;
+            z-index: 200;
+            position: relative;
+        }
+
+        .hamburger-menu span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--secondary);
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+            transform-origin: left center;
+        }
+
+        .hamburger-menu.open span:nth-child(1) {
+            transform: rotate(45deg);
+            width: 100%;
+        }
+
+        .hamburger-menu.open span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+
+        .hamburger-menu.open span:nth-child(3) {
+            transform: rotate(-45deg);
+            width: 100%;
+        }
+
+        /* Mobile Navigation Overlay */
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 101;
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+        }
+
+        .mobile-nav-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100%;
+            background: var(--white);
+            z-index: 102;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transform: translateX(100%);
+            transition: transform 0.4s ease-out;
+            display: flex;
+        }
+
+        .mobile-nav.active {
+            transform: translateX(0);
+        }
+
+        .mobile-nav .user-menu {
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: center;
+            width: 100%;
+        }
+
+        .mobile-nav .user-menu span {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav .btn {
+            width: 100%;
+            justify-content: center;
+            font-size: 1.1rem;
+            padding: 0.75rem 1rem;
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        /* Quote Builder Section */
+        .quote-builder {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .section-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            opacity: 0.9;
+        }
+
+        .form-content {
+            padding: 2rem;
+        }
+
+        /* Project Details Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(35, 81, 216, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Items Section */
+        .items-section {
+            margin-top: 2rem;
+            border-top: 2px solid var(--light-gray);
+            padding-top: 2rem;
+        }
+
+        .items-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .items-header h2 {
+            color: var(--secondary);
+            font-size: 1.5rem;
+        }
+
+        /* Item Input Form */
+        .item-input {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .item-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        /* Items List */
+        .items-list {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .items-table th {
+            background: var(--light-gray);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .items-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .items-table tr:hover {
+            background: rgba(35, 81, 216, 0.05);
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        /* Quote Summary Sidebar */
+        .quote-summary {
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-header {
+            background: var(--secondary);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .summary-content {
+            padding: 1.5rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .summary-row.total {
+            border-top: 2px solid var(--light-gray);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--secondary);
+        }
+
+        .summary-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        /* Database Section */
+        .database-section {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .database-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .search-box input {
+            padding-left: 2.5rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .categories {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 0.5rem 1rem;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .category-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .database-items {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--white);
+        }
+
+        .database-item {
+            padding: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .database-item:hover {
+            background: rgba(35, 81, 216, 0.05);
+        }
+
+        .database-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .item-price {
+            color: var(--primary);
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Labor Section Styles */
+        .labor-section {
+            margin-top: 2rem;
+            border-top: 2px solid var(--light-gray);
+            padding-top: 2rem;
+        }
+
+        .labor-items-container {
+            margin-top: 1rem;
+        }
+
+        .labor-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .labor-item select {
+            flex: 2;
+        }
+
+        .labor-item input {
+            flex: 1;
+        }
+
+        .labor-item .btn-danger {
+            flex: 0 0 auto;
+        }
+
+        /* Wizard Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-backdrop.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 900px;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 1rem 1.5rem;
+            background: var(--secondary);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        /* Wizard Steps */
+        .wizard-steps {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .wizard-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #666;
+            position: relative;
+            padding-right: 1.5rem;
+        }
+
+        .wizard-step::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 16px;
+            height: 2px;
+            background: var(--border-color);
+            transform: translateY(-50%);
+        }
+
+        .wizard-step:last-child::after {
+            display: none;
+        }
+
+        .wizard-step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--border-color);
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .wizard-step.active {
+            color: var(--primary);
+        }
+
+        .wizard-step.active .wizard-step-number {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .wizard-step.completed {
+            color: var(--success);
+        }
+
+        .wizard-step.completed .wizard-step-number {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .wizard-page {
+            display: none;
+        }
+
+        .wizard-page.active {
+            display: block;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            color: var(--white);
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        .toast-success {
+            background: var(--success);
+        }
+
+        .toast-error {
+            background: var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .quote-summary {
+                position: static;
+            }
+
+            .header-content {
+                padding: 0 0.8rem;
+            }
+
+            .desktop-nav {
+                display: none;
+            }
+
+            .hamburger-menu {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .item-form {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+
+            .labor-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .items-table {
+                font-size: 0.85rem;
+            }
+
+            .items-table th,
+            .items-table td {
+                padding: 0.7rem;
+            }
+
+            .categories {
+                justify-content: center;
+            }
+
+            .section-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-content,
+            .summary-content,
+            .database-section,
+            .item-input {
+                padding: 1.2rem;
+            }
+
+            .btn {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .user-menu {
+                gap: 0.5rem;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .wizard-steps {
+                gap: 0.5rem;
+            }
+
+            .wizard-step {
+                padding-right: 1rem;
+                font-size: 0.8rem;
+                width: 45%;
+            }
+
+            .wizard-step::after {
+                width: 10px;
+            }
+
+        }
+
+        @media (max-width: 530px) {
+            #wizardPrevBtn {
+                width: 40%;
+                padding: .8rem .5rem;
+            }
+
+            #wizardSaveDraftBtn {
+                width: 40%;
+            }
+
+            #wizardNextBtn {
+                width: 40%;
+            }
+
+            #wizardFinishBtn {
+                width: 40%;
+            }
+
+            .modal-footer {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo"><img src="quote.png" alt=""></a>
+            <nav class="desktop-nav">
+                <div class="user-menu">
+                    <span>Welcome, John Doe</span>
+                    <a href="#" class="btn btn-secondary">My Quotes</a>
+                    <a href="#" class="btn btn-primary">Logout</a>
+                </div>
+            </nav>
+
+            <div class="hamburger-menu" id="hamburgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+        <nav class="mobile-nav" id="mobileNav">
+            <div class="user-menu">
+                <span>Welcome, John Doe</span>
+                <a href="#" class="btn btn-secondary">My Quotes</a>
+                <a href="#" class="btn btn-primary">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="quote-builder">
+            <div class="section-header">
+                <h1>Create New Quote</h1>
+                <p>Build professional electrical quotes with ease</p>
+            </div>
+
+            <div class="form-content">
+                <button id="startWizardBtn" class="btn btn-primary">Start New Quote Wizard</button>
+            </div>
+        </div>
+
+        <!-- Quote Summary -->
+        <div class="quote-summary">
+            <div class="summary-header">
+                <h2>Quote Summary</h2>
+            </div>
+            <div class="summary-content">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">₦0.00</span>
+                </div>
+                <div class="summary-row" id="laborSummaryRow">
+                    <span>Labor:</span>
+                    <span id="labor">₦0.00</span>
+                </div>
+                <div class="summary-row" id="profitSummaryRow">
+                    <span>Profit:</span>
+                    <span id="profit">₦0.00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total Amount:</span>
+                    <span id="totalAmount">₦0.00</span>
+                </div>
+
+                <div class="summary-actions">
+                    <button type="button" class="btn btn-success pulse" id="generateQuoteBtn">
+                        📄 Generate PDF Quote
+                    </button>
+                    <button type="button" class="btn btn-primary" id="saveQuoteBtn">
+                        💾 Save Quote
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="previewQuoteBtn">
+                        👁️ Preview Quote
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Wizard Modal -->
+    <div class="modal-backdrop" id="quoteWizardModal">
+        <div class="modal" role="document">
+            <div class="modal-header">
+                <h2 class="modal-title">New Quote Wizard</h2>
+                <button class="modal-close" id="closeWizardBtn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="wizard-steps" id="wizardSteps">
+                    <div class="wizard-step" data-step="1">
+                        <span class="wizard-step-number">1</span>
+                        Project
+                    </div>
+                    <div class="wizard-step" data-step="2">
+                        <span class="wizard-step-number">2</span>
+                        Client
+                    </div>
+                    <div class="wizard-step" data-step="3">
+                        <span class="wizard-step-number">3</span>
+                        Items
+                    </div>
+                    <div class="wizard-step" data-step="4">
+                        <span class="wizard-step-number">4</span>
+                        Labor
+                    </div>
+                    <div class="wizard-step" data-step="5">
+                        <span class="wizard-step-number">5</span>
+                        Summary
+                    </div>
+                </div>
+
+                <!-- Step 1: Project Details -->
+                <div class="wizard-page" data-step-page="1">
+                    <h2 style="color: var(--secondary); margin-bottom: 1rem;">Project Details</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="wizardProjectType">Project Type *</label>
+                            <select id="wizardProjectType" required>
+                                <option value="">Select Project Type</option>
+                                <option value="house_wiring">House Wiring</option>
+                                <option value="solar_installation">Solar Installation</option>
+                                <option value="cctv_installation">CCTV Installation</option>
+                                <option value="smart_home_automation">Smart Home Automation</option>
+                                <option value="lighting_design_tv_console">Lighting Design & TV Console</option>
+                                <option value="electric_fence_installation">Electric Fence Installation</option>
+                                <option value="ac_installation">AC Installation</option>
+                                <option value="generator_installation">Generator Installation</option>
+                                <option value="dish_installation">Dish Installation (DSTV, GOTV, etc.)</option>
+                                <option value="solar_pump_installation">Solar Pump Installation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="wizardProjectName">Project Name *</label>
+                            <input type="text" id="wizardProjectName" required
+                                placeholder="e.g. 12B Maple Street Lighting Upgrade">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="wizardProjectAddress">Project Address *</label>
+                        <textarea id="wizardProjectAddress" required
+                            placeholder="Enter complete project address"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="wizardQuoteDate">Quote Date</label>
+                            <input type="date" id="wizardQuoteDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="wizardValidUntil">Valid Until</label>
+                            <input type="date" id="wizardValidUntil">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Client Details -->
+                <div class="wizard-page" data-step-page="2">
+                    <h2 style="color: var(--secondary); margin-bottom: 1rem;">Client Details</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="wizardClientName">Client Name *</label>
+                            <input type="text" id="wizardClientName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="wizardClientEmail">Client Email</label>
+                            <input type="email" id="wizardClientEmail">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="wizardClientPhone">Client Phone</label>
+                            <input type="tel" id="wizardClientPhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="wizardClientAddress">Client Address</label>
+                            <input type="text" id="wizardClientAddress" placeholder="Billing address">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="wizardClientNotes">Client Notes</label>
+                        <textarea id="wizardClientNotes"
+                            placeholder="Any special billing or PO instructions..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Step 3: Items -->
+                <div class="wizard-page" data-step-page="3">
+                    <h2 style="color: var(--secondary); margin-bottom: 1rem;">Quote Items</h2>
+                    <div class="database-section">
+                        <div class="database-header">
+                            <h3 style="color: var(--secondary);">Electrical Materials</h3>
+                        </div>
+
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="wizardSearchItems" placeholder="Search for electrical components...">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="wizardItemCategory">Select Item Category</label>
+                            <select id="wizardItemCategory">
+                                <option value="all">All Items</option>
+                                <option value="house_wiring">House Wiring</option>
+                                <option value="solar_installation">Solar Installation</option>
+                                <option value="cctv_installation">CCTV Installation</option>
+                                <option value="smart_home_automation">Smart Home Automation</option>
+                                <option value="lighting_design_tv_console">Lighting Design & TV Console</option>
+                                <option value="electric_fence_installation">Electric Fence Installation</option>
+                                <option value="ac_installation">AC Installation</option>
+                                <option value="generator_installation">Generator Installation</option>
+                                <option value="dish_installation">Dish Installation (DSTV, GOTV, etc.)</option>
+                                <option value="solar_pump_installation">Solar Pump Installation</option>
+                            </select>
+                        </div>
+
+                        <div class="database-items" id="wizardDatabaseItems"></div>
+                    </div>
+
+                    <div class="item-input">
+                        <h3 style="margin-bottom: 1rem; color: var(--secondary);">Add Custom Item</h3>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
+                            In case you didn't find what you're looking for in the database, you can add custom items
+                            here.
+                        </p>
+                        <div class="item-form">
+                            <div class="form-group">
+                                <label for="wizardItemDescription">Item Description</label>
+                                <input type="text" id="wizardItemDescription" placeholder="Enter item description">
+                            </div>
+                            <div class="form-group">
+                                <label for="wizardItemQuantity">Quantity</label>
+                                <input type="number" id="wizardItemQuantity" min="1" value="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="wizardItemRate">Rate (₦)</label>
+                                <input type="number" id="wizardItemRate" step="0.01" min="0" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="wizardItemUnit">Unit</label>
+                                <select id="wizardItemUnit">
+                                    <option value="pcs">Pieces</option>
+                                    <option value="meters">Meters</option>
+                                    <option value="hours">Hours</option>
+                                    <option value="sqm">Sq. Meters</option>
+                                    <option value="feet">Feet</option>
+                                </select>
+                            </div>
+                            <button type="button" id="wizardAddItemBtn" class="btn btn-primary" disabled>Add</button>
+                        </div>
+                    </div>
+
+                    <div class="items-list">
+                        <table class="items-table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Qty</th>
+                                    <th>Unit</th>
+                                    <th>Rate (₦)</th>
+                                    <th>Amount (₦)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wizardItemsTableBody">
+                                <tr class="empty-state">
+                                    <td colspan="6">
+                                        <div class="empty-state">
+                                            <div class="empty-state-icon">📋</div>
+                                            <p>No items added yet. Add items from the database or create custom items.
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Step 4: Labor -->
+                <div class="wizard-page" data-step-page="4">
+                    <h2 style="color: var(--secondary); margin-bottom: 1rem;">Labor Costs</h2>
+                    <div class="form-group">
+                        <label for="wizardLaborType">Select Labor Type</label>
+                        <div style="display: flex; gap: 1rem;">
+                            <select id="wizardLaborType" style="flex: 1;">
+                                <option value="workforce">Workforce</option>
+                                <option value="logistics">Logistics/Transport</option>
+                                <option value="feeding">Sustenance/Feeding</option>
+                                <option value="accommodation">Accommodation</option>
+                                <option value="tools">Project Tools</option>
+                                <option value="contingency">Contingency Cost</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <button type="button" id="wizardAddLaborBtn" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="labor-items-container" id="wizardLaborItemsContainer"></div>
+                </div>
+
+                <!-- Step 5: Profit Goals -->
+                <div class="wizard-page" data-step-page="5">
+                    <h2 style="color: var(--secondary); margin-bottom: 1rem;">Profit Goals</h2>
+                    <div
+                        style="background: var(--light-gray); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <h3 style="color: var(--secondary); margin-bottom: 1rem;">How much profit do you want to make on
+                            this project?</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="wizardProfitMethod">Profit Calculation Method</label>
+                                <select id="wizardProfitMethod" style="width: 100%;">
+                                    <option value="amount">Fixed Amount (₦)</option>
+                                    <option value="percentage">Percentage of Subtotal (%)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="wizardProfitValue">Profit Value</label>
+                                <input type="number" id="wizardProfitValue" style="width: 100%;"
+                                    placeholder="Enter amount or percentage" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div
+                            style="margin-top: 1rem; padding: 1rem; background: rgba(35, 81, 216, 0.05); border-radius: 5px;">
+                            <div style="display: flex; justify-content: space-between; font-weight: 600;">
+                                <span>Project Subtotal (Materials + Labor):</span>
+                                <span id="profitSubtotalDisplay">₦0.00</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                                <span>Calculated Profit:</span>
+                                <span id="profitAmountDisplay">₦0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Step 6: Summary -->
+                <div class="wizard-page" data-step-page="6">
+                    <h2 style="color: var(--secondary); margin-bottom: 1rem;">Quote Summary</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <h3>Project Details</h3>
+                            <div id="summaryProjectDetails" style="margin-top: 0.5rem; line-height: 1.6;"></div>
+                        </div>
+                        <div class="form-group">
+                            <h3>Client Details</h3>
+                            <div id="summaryClientDetails" style="margin-top: 0.5rem; line-height: 1.6;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Summary -->
+                    <div class="financial-summary">
+                        <div class="summary-header">
+                            <h2>Financial Summary</h2>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-row">
+                                <span>Materials Subtotal:</span>
+                                <span id="materialsSubtotal">₦0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Labor Subtotal:</span>
+                                <span id="laborSubtotal">₦0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Profit:</span>
+                                <span id="financialProfit">₦0.00</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total Amount:</span>
+                                <span id="financialTotalAmount">₦0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="summaryNotes">Additional Notes</label>
+                        <textarea id="summaryNotes" placeholder="Any additional notes for this quote..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="wizardPrevBtn" disabled>Back</button>
+                <div style="margin-left: auto;"></div>
+                <button type="button" class="btn btn-secondary" id="wizardSaveDraftBtn">Save Draft</button>
+                <button type="button" class="btn btn-primary" id="wizardNextBtn">Next</button>
+                <button type="button" class="btn btn-success hidden" id="wizardFinishBtn">Finish & Create Quote</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // Sample database items
+        const databaseItems = [
+            { id: 1, name: "LED Ceiling Light 20W", projectType: "house_wiring", price: 5000, unit: "pcs" },
+            { id: 2, name: "Fluorescent Tube Light 40W", projectType: "house_wiring", price: 3500, unit: "pcs" },
+            { id: 3, name: "Wall Socket 13A", projectType: "solar_installation", price: 1200, unit: "pcs" },
+            { id: 4, name: "Light Switch Single Gang", projectType: "solar_installation", price: 800, unit: "pcs" },
+            { id: 5, name: "Emergency Exit Light", projectType: "cctv_installation", price: 15000, unit: "pcs" },
+            { id: 6, name: "PVC Cable 2.5mm Twin & Earth", projectType: "ac_installation", price: 450, unit: "meters" },
+            { id: 7, name: "Armoured Cable 4mm SWA", projectType: "generator_installation", price: 850, unit: "meters" },
+            { id: 8, name: "Cat6 Network Cable", projectType: "solar_pump_installation", price: 300, unit: "meters" },
+            { id: 9, name: "Coaxial Cable RG6", projectType: "house_wiring", price: 200, unit: "meters" },
+            { id: 10, name: "Fire Resistant Cable", projectType: "cctv_installation", price: 1200, unit: "meters" },
+        ];
+
+        let quoteItems = [];
+        let laborItems = [];
+        let currentCategory = 'all';
+        let currentStep = 1;
+        const totalSteps = 6;
+
+        // DOM Elements
+        const startWizardBtn = document.getElementById('startWizardBtn');
+        const quoteWizardModal = document.getElementById('quoteWizardModal');
+        const closeWizardBtn = document.getElementById('closeWizardBtn');
+        const wizardSteps = document.getElementById('wizardSteps');
+        const wizardPages = document.querySelectorAll('.wizard-page');
+        const wizardPrevBtn = document.getElementById('wizardPrevBtn');
+        const wizardNextBtn = document.getElementById('wizardNextBtn');
+        const wizardFinishBtn = document.getElementById('wizardFinishBtn');
+        const wizardSaveDraftBtn = document.getElementById('wizardSaveDraftBtn');
+        const toastContainer = document.getElementById('toastContainer');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function () {
+            setDefaultDates();
+            setupEventListeners();
+            setupWizardEventListeners();
+            showWizardModal();
+            projectSelect();
+        });
+        function projectSelect() {
+    // Retrieve the projectType from the URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedProjectType = urlParams.get('projectType');
+
+    // Step 1: Set the project type in the project dropdown
+    if (selectedProjectType) {
+        const projectTypeSelect = document.getElementById('wizardProjectType');
+        projectTypeSelect.value = selectedProjectType;  // Set the selected project type in the dropdown
+    }
+
+    // Step 3: Set the project type filter for the items section
+    const itemCategorySelect = document.getElementById('wizardItemCategory');
+    if (selectedProjectType) {
+        itemCategorySelect.value = selectedProjectType;
+        populateDatabaseItems(selectedProjectType, '');  // Populating items based on project type
+    }
+}
+        function setDefaultDates() {
+            const today = new Date();
+            const validUntil = new Date();
+            validUntil.setDate(today.getDate() + 30);
+
+            document.getElementById('wizardQuoteDate').value = today.toISOString().split('T')[0];
+            document.getElementById('wizardValidUntil').value = validUntil.toISOString().split('T')[0];
+        }
+
+        function setupEventListeners() {
+            const hamburgerMenu = document.getElementById('hamburgerMenu');
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+
+            hamburgerMenu.addEventListener('click', toggleMobileMenu);
+
+            mobileNavOverlay.addEventListener('click', toggleMobileMenu);
+
+            mobileNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', toggleMobileMenu);
+            });
+
+            startWizardBtn.addEventListener('click', showWizardModal);
+        }
+
+        function setupWizardEventListeners() {
+            closeWizardBtn.addEventListener('click', hideWizardModal);
+            wizardPrevBtn.addEventListener('click', goToPreviousStep);
+            wizardNextBtn.addEventListener('click', goToNextStep);
+            wizardFinishBtn.addEventListener('click', finishWizard);
+            wizardSaveDraftBtn.addEventListener('click', saveDraft);
+
+            document.getElementById('wizardItemCategory').addEventListener('change', function () {
+                const selectedCategory = this.value;
+                populateDatabaseItems(selectedCategory, document.getElementById('wizardSearchItems').value);
+            });
+
+            document.getElementById('wizardSearchItems').addEventListener('input', function () {
+                const selectedCategory = document.getElementById('wizardItemCategory').value;
+                populateDatabaseItems(selectedCategory, this.value);
+            });
+
+            document.getElementById('wizardDatabaseItems').addEventListener('click', function (e) {
+                const itemElement = e.target.closest('.database-item');
+                if (itemElement) {
+                    const itemId = parseInt(itemElement.dataset.itemId);
+                    const item = databaseItems.find(i => i.id === itemId);
+                    if (item) {
+                        document.getElementById('wizardItemDescription').value = item.name;
+                        document.getElementById('wizardItemRate').value = item.price;
+                        document.getElementById('wizardItemUnit').value = item.unit;
+                        document.getElementById('wizardItemQuantity').value = 1;
+                        document.getElementById('wizardItemQuantity').focus();
+                        checkAddItemButtonStatus();
+
+                        itemElement.style.background = 'rgba(35, 81, 216, 0.2)';
+                        setTimeout(() => {
+                            itemElement.style.background = '';
+                        }, 1000);
+                    }
+                }
+            });
+
+            document.getElementById('wizardAddItemBtn').addEventListener('click', addItem);
+            document.getElementById('wizardAddLaborBtn').addEventListener('click', addLaborItem);
+
+            document.getElementById('wizardItemDescription').addEventListener('input', checkAddItemButtonStatus);
+            document.getElementById('wizardItemQuantity').addEventListener('input', checkAddItemButtonStatus);
+            document.getElementById('wizardItemRate').addEventListener('input', checkAddItemButtonStatus);
+        }
+
+        function populateDatabaseItems(projectType = 'all', searchTerm = '') {
+            const container = document.getElementById('wizardDatabaseItems');
+            let filteredItems = databaseItems;
+
+            if (projectType !== 'all') {
+                filteredItems = filteredItems.filter(item => item.projectType === projectType);
+            }
+
+            if (searchTerm) {
+                filteredItems = filteredItems.filter(item =>
+                    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+
+            if (filteredItems.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No items found</p></div>';
+                return;
+            }
+
+            container.innerHTML = filteredItems.map(item => `
+                <div class="database-item" data-item-id="${item.id}">
+                    <div class="item-details">
+                        <div class="item-name">${item.name}</div>
+                        <small style="color: #666; text-transform: capitalize;">${item.projectType} • ${item.unit}</small>
+                    </div>
+                    <div class="item-price">₦${item.price.toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        function checkAddItemButtonStatus() {
+            const description = document.getElementById('wizardItemDescription').value.trim();
+            const quantity = parseFloat(document.getElementById('wizardItemQuantity').value);
+            const rate = parseFloat(document.getElementById('wizardItemRate').value);
+
+            const addItemBtn = document.getElementById('wizardAddItemBtn');
+            if (description && quantity > 0 && !isNaN(rate) && rate >= 0) {
+                addItemBtn.disabled = false;
+            } else {
+                addItemBtn.disabled = true;
+            }
+        }
+
+        function addItem() {
+            const description = document.getElementById('wizardItemDescription').value.trim();
+            const quantity = parseFloat(document.getElementById('wizardItemQuantity').value) || 0;
+            const rate = parseFloat(document.getElementById('wizardItemRate').value) || 0;
+            const unit = document.getElementById('wizardItemUnit').value;
+            const projectType = document.getElementById('wizardProjectType').value;
+
+            if (!description || quantity <= 0 || rate < 0) {
+                showToast('Please fill in all required fields (Description, Quantity, Rate) with valid values.', 'error');
+                return;
+            }
+
+            const item = {
+                id: Date.now(),
+                description,
+                quantity,
+                rate,
+                unit,
+                projectType,
+                amount: quantity * rate
+            };
+
+            quoteItems.push(item);
+            renderItems();
+            calculateTotals();
+            clearItemForm();
+            checkAddItemButtonStatus();
+
+            setTimeout(() => {
+                const newRow = document.querySelector(`[data-item-id="${item.id}"]`);
+                if (newRow) {
+                    newRow.classList.add('fade-in');
+                }
+            }, 100);
+        }
+
+        function addLaborItem() {
+            const laborType = document.getElementById('wizardLaborType').value;
+            if (!laborType) {
+                showToast('Please select a labor type', 'error');
+                return;
+            }
+
+            // Check if this labor type already exists
+            if (laborItems.some(item => item.type === laborType)) {
+                showToast('This labor type has already been added', 'error');
+                return;
+            }
+
+            const laborNameMap = {
+                'workforce': 'Workforce',
+                'logistics': 'Logistics/Transport',
+                'feeding': 'Sustenance/Feeding',
+                'accommodation': 'Accommodation',
+                'tools': 'Project Tools',
+                'contingency': 'Contingency Cost',
+                'other': 'Other'
+            };
+
+            const laborItem = {
+                id: Date.now(),
+                type: laborType,
+                name: laborNameMap[laborType] || 'Other',
+                quantity: 1,
+                rate: 0,
+                days: 1,
+                amount: 0 // This will be calculated in renderLaborItems
+            };
+
+            laborItems.push(laborItem);
+            renderLaborItems();
+            calculateTotals();
+        }
+
+        // Function to render all labor items in the UI
+function renderLaborItems() {
+    const container = document.getElementById('wizardLaborItemsContainer');
+    container.innerHTML = laborItems.map(item => {
+        item.amount = item.quantity * item.rate * item.days;
+        return `
+            <div class="labor-item" data-item-id="${item.id}" style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span style="font-weight: 600;">${item.name}</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 0.5rem;">
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" value="${item.quantity}" min="1" 
+                            oninput="updateLaborItem(${item.id}, 'quantity', this.value)"
+                            class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Rate (₦)</label>
+                        <div style="position: relative;">
+                            <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);">₦</span>
+                            <input type="number" value="${item.rate}" min="0" step="0.01" 
+                                oninput="updateLaborItem(${item.id}, 'rate', this.value)"
+                                style="padding-left: 25px;" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Days</label>
+                        <input type="number" value="${item.days}" min="1" 
+                            oninput="updateLaborItem(${item.id}, 'days', this.value)"
+                            class="form-control">
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div id="total" style="font-weight: 600;">
+                        Total: ₦${item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </div>
+                    <button type="button" class="btn btn-danger" onclick="removeLaborItem(${item.id})">Remove</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+
+ function updateLaborItem(itemId, field, value) {
+    const laborItem = laborItems.find(item => item.id === itemId);
+    if (laborItem) {
+        // Update the respective field based on input
+        if (field === 'quantity') {
+            laborItem.quantity = parseFloat(value) || 1;
+        } else if (field === 'rate') {
+            laborItem.rate = parseFloat(value) || 0;
+        } else if (field === 'days') {
+            laborItem.days = parseFloat(value) || 1;
+        }
+
+        // Recalculate the amount based on the inputs
+        laborItem.amount = laborItem.quantity * laborItem.rate * laborItem.days;
+
+        // Try to find the labor item row
+        const laborRow = document.querySelector(`[data-item-id="${itemId}"]`);
+        
+        if (laborRow) { // Only update if laborRow is found
+            laborRow.querySelector('#total').textContent = `₦${laborItem.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+        } else {
+            console.warn(`Labor row with itemId ${itemId} not found`);
+        }
+
+        // Recalculate and update the total labor cost immediately
+        calculateLaborTotal();
+
+        // Recalculate the overall totals (materials + labor + profit)
+        calculateTotals();
+    }
+}
+
+
+// Function to calculate total labor cost
+function calculateLaborTotal() {
+    const totalLabor = laborItems.reduce((sum, item) => sum + item.amount, 0);
+
+    // Update the labor total displayed in the summary
+    document.getElementById('labor').textContent = `₦${totalLabor.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+}
+
+
+
+function calculateLaborTotal() {
+    // Sum the amount for all labor items
+    const totalLabor = laborItems.reduce((sum, item) => sum + item.amount, 0);
+
+    // Update the labor total in the summary section
+    document.getElementById('labor').textContent = `₦${totalLabor.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+}
+
+
+
+
+        function removeLaborItem(itemId) {
+            laborItems = laborItems.filter(item => item.id !== itemId);
+            renderLaborItems();
+            calculateTotals();
+        }
+
+        function removeItem(itemId) {
+            quoteItems = quoteItems.filter(item => item.id !== itemId);
+            renderItems();
+            calculateTotals();
+        }
+
+        function renderItems() {
+            const tbody = document.getElementById('wizardItemsTableBody');
+            const itemCount = document.getElementById('itemCount');
+            if (itemCount) {
+                itemCount.textContent = `${quoteItems.length} items`;
+            }
+
+            if (quoteItems.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="empty-state">
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📋</div>
+                                <p>No items added yet. Add items from the database or create custom items.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = quoteItems.map(item => `
+                <tr data-item-id="${item.id}">
+                    <td>${item.description}</td>
+                    <td>${item.quantity}</td>
+                    <td>${item.unit}</td>
+                    <td>₦${item.rate.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td>₦${item.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td class="item-actions">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeItem(${item.id})">Remove</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Function to calculate all totals, including material, labor, and profit
+function calculateTotals() {
+    // Calculate subtotal for materials and labor
+    const materialsSubtotal = quoteItems.reduce((sum, item) => sum + item.amount, 0);
+    const laborTotal = laborItems.reduce((sum, item) => sum + item.amount, 0);
+    const subtotal = materialsSubtotal + laborTotal;
+
+    // Calculate profit based on the selected method (amount or percentage)
+    let profitAmount = 0;
+    const profitMethod = document.getElementById('wizardProfitMethod').value;
+    const profitValue = parseFloat(document.getElementById('wizardProfitValue').value) || 0;
+
+    if (profitMethod === 'amount') {
+        profitAmount = profitValue;
+    } else {
+        profitAmount = subtotal * (profitValue / 100);
+    }
+
+    // Calculate the final total amount
+    const totalAmount = subtotal + profitAmount;
+
+    // Update the summary section with the new totals
+    document.getElementById('subtotal').textContent = `₦${materialsSubtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    document.getElementById('labor').textContent = `₦${laborTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    document.getElementById('profit').textContent = `₦${profitAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    document.getElementById('totalAmount').textContent = `₦${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+
+    // Update the financial summary as well
+    document.getElementById('materialsSubtotal').textContent = `₦${materialsSubtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    document.getElementById('laborSubtotal').textContent = `₦${laborTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    document.getElementById('financialProfit').textContent = `₦${profitAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    document.getElementById('financialTotalAmount').textContent = `₦${totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+}
+
+
+
+
+
+
+
+        document.getElementById('wizardProfitMethod').addEventListener('change', function () {
+            const profitValueInput = document.getElementById('wizardProfitValue');
+            if (this.value === 'amount') {
+                profitValueInput.placeholder = 'Enter profit amount (₦)';
+            } else {
+                profitValueInput.placeholder = 'Enter profit percentage (%)';
+            }
+            calculateTotals();
+        });
+
+        document.getElementById('wizardProfitValue').addEventListener('input', calculateTotals);
+
+        function clearItemForm() {
+            document.getElementById('wizardItemDescription').value = '';
+            document.getElementById('wizardItemQuantity').value = '1';
+            document.getElementById('wizardItemRate').value = '';
+            document.getElementById('wizardItemUnit').value = 'pcs';
+            document.getElementById('wizardItemDescription').focus();
+        }
+
+        function toggleMobileMenu() {
+            const hamburgerMenu = document.getElementById('hamburgerMenu');
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+
+            hamburgerMenu.classList.toggle('open');
+            mobileNav.classList.toggle('active');
+            mobileNavOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function showWizardModal() {
+            quoteWizardModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            updateWizardUI();
+        }
+
+        function hideWizardModal() {
+            quoteWizardModal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function updateWizardUI() {
+            wizardSteps.querySelectorAll('.wizard-step').forEach(stepEl => {
+                const stepNum = parseInt(stepEl.dataset.step);
+                stepEl.classList.remove('active', 'completed');
+                if (stepNum < currentStep) {
+                    stepEl.classList.add('completed');
+                } else if (stepNum === currentStep) {
+                    stepEl.classList.add('active');
+                }
+            });
+
+            wizardPages.forEach(page => {
+                if (parseInt(page.dataset.stepPage) === currentStep) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
+                }
+            });
+
+            wizardPrevBtn.disabled = currentStep === 1;
+            wizardNextBtn.classList.toggle('hidden', currentStep === totalSteps);
+            wizardFinishBtn.classList.toggle('hidden', currentStep !== totalSteps);
+
+            if (currentStep === 5) {
+                updateSummaryStep();
+            }
+        }
+
+        function updateSummaryStep() {
+            const projectDetails = document.getElementById('summaryProjectDetails');
+            projectDetails.innerHTML = `
+                <p><strong>Project:</strong> ${document.getElementById('wizardProjectName').value}</p>
+                <p><strong>Type:</strong> ${document.getElementById('wizardProjectType').options[document.getElementById('wizardProjectType').selectedIndex].text}</p>
+                <p><strong>Address:</strong> ${document.getElementById('wizardProjectAddress').value}</p>
+                <p><strong>Quote Date:</strong> ${document.getElementById('wizardQuoteDate').value}</p>
+                <p><strong>Valid Until:</strong> ${document.getElementById('wizardValidUntil').value}</p>
+            `;
+
+            const clientDetails = document.getElementById('summaryClientDetails');
+            clientDetails.innerHTML = `
+                <p><strong>Client:</strong> ${document.getElementById('wizardClientName').value}</p>
+                <p><strong>Email:</strong> ${document.getElementById('wizardClientEmail').value || 'N/A'}</p>
+                <p><strong>Phone:</strong> ${document.getElementById('wizardClientPhone').value || 'N/A'}</p>
+                <p><strong>Address:</strong> ${document.getElementById('wizardClientAddress').value || 'N/A'}</p>
+            `;
+
+            calculateTotals();
+        }
+
+        function goToPreviousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateWizardUI();
+            }
+        }
+
+        function goToNextStep() {
+            if (!validateCurrentStep()) {
+                return;
+            }
+
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateWizardUI();
+            }
+        }
+
+        function validateCurrentStep() {
+            switch (currentStep) {
+                case 1:
+                    if (!document.getElementById('wizardProjectType').value) {
+                        showToast('Please select a project type', 'error');
+                        return false;
+                    }
+                    if (!document.getElementById('wizardProjectName').value.trim()) {
+                        showToast('Please enter a project name', 'error');
+                        return false;
+                    }
+                    if (!document.getElementById('wizardProjectAddress').value.trim()) {
+                        showToast('Please enter a project address', 'error');
+                        return false;
+                    }
+                    break;
+                case 2:
+                    if (!document.getElementById('wizardClientName').value.trim()) {
+                        showToast('Please enter a client name', 'error');
+                        return false;
+                    }
+                    break;
+                case 3:
+                    if (quoteItems.length === 0) {
+                        showToast('Please add at least one item to the quote', 'error');
+                        return false;
+                    }
+                    break;
+            }
+            return true;
+        }
+
+        // Finalize the wizard, generate the quote data for saving or displaying
+function finishWizard() {
+    if (validateCurrentStep()) {
+        const quoteData = {
+            project: {
+                type: document.getElementById('wizardProjectType').value,
+                name: document.getElementById('wizardProjectName').value,
+                address: document.getElementById('wizardProjectAddress').value,
+                quoteDate: document.getElementById('wizardQuoteDate').value,
+                validUntil: document.getElementById('wizardValidUntil').value
+            },
+            client: {
+                name: document.getElementById('wizardClientName').value,
+                email: document.getElementById('wizardClientEmail').value,
+                phone: document.getElementById('wizardClientPhone').value,
+                address: document.getElementById('wizardClientAddress').value,
+                notes: document.getElementById('wizardClientNotes').value
+            },
+            items: quoteItems,
+            labor: laborItems,
+            notes: document.getElementById('summaryNotes').value,
+            totals: {
+                materials: parseFloat(document.getElementById('materialsSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                labor: parseFloat(document.getElementById('laborSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                subtotal: parseFloat(document.getElementById('subtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                profit: parseFloat(document.getElementById('profit').textContent.replace('₦', '').replace(/,/g, '')),
+                total: parseFloat(document.getElementById('totalAmount').textContent.replace('₦', '').replace(/,/g, ''))
+            }
+        };
+
+        console.log('Quote Data:', quoteData);
+        showToast('Quote created successfully!', 'success');
+        hideWizardModal();
+    }
+}
+
+        function hideWizardModal() {
+            // Close the modal
+            const quoteWizardModal = document.getElementById('quoteWizardModal');
+            quoteWizardModal.classList.remove('show');
+            document.body.style.overflow = ''; // Allow scrolling again
+        }
+
+
+
+        function saveDraft() {
+            const quoteData = {
+                project: {
+                    type: document.getElementById('wizardProjectType').value,
+                    name: document.getElementById('wizardProjectName').value,
+                    address: document.getElementById('wizardProjectAddress').value,
+                    quoteDate: document.getElementById('wizardQuoteDate').value,
+                    validUntil: document.getElementById('wizardValidUntil').value
+                },
+                client: {
+                    name: document.getElementById('wizardClientName').value,
+                    email: document.getElementById('wizardClientEmail').value,
+                    phone: document.getElementById('wizardClientPhone').value,
+                    address: document.getElementById('wizardClientAddress').value,
+                    notes: document.getElementById('wizardClientNotes').value
+                },
+                items: quoteItems,
+                labor: laborItems,
+                notes: document.getElementById('summaryNotes').value,
+                totals: {
+                    materials: parseFloat(document.getElementById('summaryMaterialsSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                    labor: parseFloat(document.getElementById('summaryLaborSubtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                    subtotal: parseFloat(document.getElementById('summarySubtotal').textContent.replace('₦', '').replace(/,/g, '')),
+                    vat: parseFloat(document.getElementById('summaryVat').textContent.replace('₦', '').replace(/,/g, '')),
+                    total: parseFloat(document.getElementById('summaryTotalAmount').textContent.replace('₦', '').replace(/,/g, ''))
+                }
+            };
+
+            console.log('Draft Quote Data:', quoteData);
+            showToast('Draft saved successfully!', 'success');
+        }
+
+        function resetWizard() {
+            currentStep = 1;
+            quoteItems = [];
+            laborItems = [];
+
+            document.getElementById('wizardProjectType').value = '';
+            document.getElementById('wizardProjectName').value = '';
+            document.getElementById('wizardProjectAddress').value = '';
+            document.getElementById('wizardClientName').value = '';
+            document.getElementById('wizardClientEmail').value = '';
+            document.getElementById('wizardClientPhone').value = '';
+            document.getElementById('wizardClientAddress').value = '';
+            document.getElementById('wizardClientNotes').value = '';
+            document.getElementById('summaryNotes').value = '';
+
+            document.getElementById('wizardItemsTableBody').innerHTML = `
+                <tr class="empty-state">
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <p>No items added yet. Add items from the database or create custom items.</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            document.getElementById('wizardLaborItemsContainer').innerHTML = '';
+
+            setDefaultDates();
+
+            updateWizardUI();
+            calculateTotals();
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        window.updateLaborItem = updateLaborItem;
+        window.removeLaborItem = removeLaborItem;
+        window.removeItem = removeItem;
+    </script>
+</body>
+
+</html>
